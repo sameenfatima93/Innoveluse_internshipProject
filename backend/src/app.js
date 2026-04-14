@@ -1,3 +1,4 @@
+// app.js - Main application setup for the backend server
 const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/auth.routes");
