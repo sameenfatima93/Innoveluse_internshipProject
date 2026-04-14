@@ -11,7 +11,23 @@ const typeColors = {
 export default function Topbar({ title }) {
   const { notifications, unreadCount, markAllRead, sidebarOpen } = useAdmin();
   const [showNotifs, setShowNotifs] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [search, setSearch] = useState('');
+
+  const handleAdminLogout = async () => {
+    try {
+      await fetch('http://localhost:5000/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: 'admin' }),
+      });
+    } catch {
+      // Always allow local logout fallback.
+    } finally {
+      localStorage.removeItem('timex_admin_auth');
+      window.location.href = '/';
+    }
+  };
 
   return (
     <header
@@ -80,13 +96,36 @@ export default function Topbar({ title }) {
         </div>
 
         {/* Avatar */}
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-purple-600 flex items-center justify-center text-xs font-bold text-white cursor-pointer">
-          AD
+        <div className="relative">
+          <button
+            onClick={() => setShowProfileMenu(prev => !prev)}
+            className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-purple-600 flex items-center justify-center text-xs font-bold text-white cursor-pointer"
+          >
+            AD
+          </button>
+
+          {showProfileMenu && (
+            <div className="absolute right-0 top-12 w-44 rounded-xl p-2 z-50"
+              style={{ background: '#0d1426', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <button
+                onClick={handleAdminLogout}
+                className="w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {showNotifs && (
-        <div className="fixed inset-0 z-40" onClick={() => setShowNotifs(false)} />
+      {(showNotifs || showProfileMenu) && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => {
+            setShowNotifs(false);
+            setShowProfileMenu(false);
+          }}
+        />
       )}
     </header>
   );

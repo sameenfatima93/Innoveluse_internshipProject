@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -8,10 +8,22 @@ import "../styles/Navbar.css";
 export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
   const { cartCount, setCartOpen } = useCart();
   const { user, logout, setShowAuth } = useAuth();
 
   const isActive = (path) => location.pathname === path;
+
+  useEffect(() => {
+    const handleOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, []);
 
   return (
     <nav className="navbar">
@@ -39,16 +51,28 @@ export default function Navbar() {
 
         {/* Person Icon */}
         {user ? (
-          <div className="navbar__user-menu">
-            <button className="navbar__icon-btn navbar__icon-btn--active" title={user.name}>
+          <div className="navbar__user-menu" ref={profileRef}>
+            <button
+              className="navbar__icon-btn navbar__icon-btn--active"
+              title={user.name}
+              onClick={() => setProfileOpen((prev) => !prev)}
+            >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
             </button>
-            <div className="navbar__dropdown">
+            <div className={`navbar__dropdown ${profileOpen ? "navbar__dropdown--open" : ""}`}>
               <p className="navbar__dropdown-name">Hi, {user.name}!</p>
-              <button className="navbar__dropdown-logout" onClick={logout}>Logout</button>
+              <button
+                className="navbar__dropdown-logout"
+                onClick={async () => {
+                  await logout();
+                  setProfileOpen(false);
+                }}
+              >
+                Logout
+              </button>
             </div>
           </div>
         ) : (

@@ -20,10 +20,20 @@ export function AuthProvider({ children }) {
     setShowAuth(false);
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("timex_user");
-    localStorage.removeItem("timex_admin_auth");
+  const logout = async () => {
+    try {
+      await fetch("http://localhost:5000/api/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: user?.role || "user" }),
+      });
+    } catch {
+      // Local logout should still complete even if backend is unavailable.
+    } finally {
+      setUser(null);
+      localStorage.removeItem("timex_user");
+      localStorage.removeItem("timex_admin_auth");
+    }
   };
 
   const requireLogin = (route) => {

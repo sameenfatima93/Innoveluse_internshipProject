@@ -18,6 +18,21 @@ const navItems = [
 export default function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useAdmin();
 
+  const handleAdminLogout = async () => {
+    try {
+      await fetch('http://localhost:5000/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: 'admin' }),
+      });
+    } catch {
+      // Always allow local logout fallback.
+    } finally {
+      localStorage.removeItem('timex_admin_auth');
+      window.location.href = '/';
+    }
+  };
+
   return (
     <aside
       className={`fixed left-0 top-0 h-full z-30 flex flex-col transition-all duration-300 ${
@@ -64,6 +79,13 @@ export default function Sidebar() {
 
       {/* Toggle Button */}
       <div className="p-2 border-t border-white/5">
+        <button
+          onClick={handleAdminLogout}
+          className={`mb-2 w-full flex items-center gap-2 px-3 py-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-sm ${!sidebarOpen ? 'justify-center' : ''}`}
+          title={!sidebarOpen ? 'Logout' : ''}
+        >
+          {sidebarOpen ? <span>Logout</span> : <span>⎋</span>}
+        </button>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-slate-500 hover:text-white hover:bg-white/5 transition-all text-sm ${!sidebarOpen ? 'justify-center' : ''}`}

@@ -20,7 +20,8 @@ export default function AuthModal() {
 
     // Fixed admin credentials for dashboard access.
     if (tab === "login" && form.email === "admin123" && form.password === "admin123") {
-      login({ name: "Admin", email: "admin123", role: "admin" });
+      localStorage.removeItem("timex_user");
+      setShowAuth(false);
       window.location.href = "http://localhost:5173/?adminAuth=admin123";
       return;
     }
