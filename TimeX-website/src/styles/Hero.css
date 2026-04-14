@@ -1,0 +1,70 @@
+.hero {
+  position: relative; min-height: 90vh;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5rem; overflow: hidden;
+}
+.hero__bg { position:absolute; inset:0; pointer-events:none; }
+.hero__particles { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.hero__particle {
+  position:absolute; border-radius:50%; opacity:0.5;
+  width:var(--size); height:var(--size); background:var(--color);
+  left:var(--x); animation:floatParticle 6s ease-in-out infinite;
+  animation-delay:var(--delay); top:20%;
+}
+@keyframes floatParticle { 0%,100%{transform:translateY(0) scale(1);opacity:0.3} 50%{transform:translateY(-60px) scale(1.2);opacity:0.7} }
+
+/* Content */
+.hero__content { position:relative; z-index:2; max-width:520px; }
+.hero__content--enter { animation:fadeInLeft 0.5s ease both; }
+.hero__content--exit { animation:fadeOutLeft 0.4s ease both; }
+@keyframes fadeInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:translateX(0)} }
+@keyframes fadeOutLeft { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(-20px)} }
+
+.hero__eyebrow { display:inline-block; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:6px 16px; border-radius:20px; border:1px solid; margin-bottom:1.5rem; }
+.hero__title { font-size:clamp(40px,5vw,68px); font-weight:800; line-height:1.12; color:#fff; margin-bottom:1.25rem; font-family:'Georgia',serif; }
+.hero__title-accent { transition:color 0.5s; }
+.hero__subtitle { font-size:16px; color:rgba(255,255,255,0.55); line-height:1.7; margin-bottom:2.5rem; }
+.hero__actions { display:flex; align-items:center; gap:2rem; flex-wrap:wrap; }
+.hero__btn { padding:14px 34px; color:#fff; border:none; border-radius:50px; font-size:15px; font-weight:700; cursor:pointer; transition:transform 0.2s,box-shadow 0.2s; }
+.hero__btn:hover { transform:translateY(-2px); }
+.hero__stats { display:flex; align-items:center; gap:1.25rem; }
+.hero__stat { display:flex; flex-direction:column; gap:2px; }
+.hero__stat-num { font-size:18px; font-weight:700; color:#fff; }
+.hero__stat-label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; }
+.hero__stat-divider { width:1px; height:32px; background:rgba(255,255,255,0.12); }
+
+/* Watch */
+.hero__watch { position:relative; width:360px; height:360px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.hero__watch--enter { animation:fadeInRight 0.5s ease both; }
+.hero__watch--exit { animation:fadeOutRight 0.4s ease both; }
+@keyframes fadeInRight { from{opacity:0;transform:translateX(30px) scale(0.95)} to{opacity:1;transform:translateX(0) scale(1)} }
+@keyframes fadeOutRight { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(20px)} }
+
+.hero__watch-glow { position:absolute; width:240px; height:240px; border-radius:50%; animation:pulse 3s ease-in-out infinite; transition:background 0.8s; }
+.hero__watch-frame { width:220px; height:220px; border-radius:50%; overflow:hidden; position:relative; z-index:2; border:2px solid rgba(255,255,255,0.08); box-shadow:0 20px 60px rgba(0,0,0,0.5); animation:float 4s ease-in-out infinite; }
+.hero__watch-img { width:100%; height:100%; object-fit:cover; }
+.hero__ring { position:absolute; border-radius:50%; border:1px solid; }
+.hero__ring--1 { width:280px; height:280px; animation:spin 12s linear infinite; }
+.hero__ring--2 { width:340px; height:340px; animation:spin 20s linear infinite reverse; }
+
+/* Dots */
+.hero__dots { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:5; }
+.hero__dot { width:8px; height:8px; border-radius:50%; border:none; cursor:pointer; transition:all 0.3s; }
+.hero__dot--active { width:24px; border-radius:4px; }
+
+/* Progress bar */
+.hero__progress { position:absolute; bottom:0; left:0; right:0; height:2px; background:rgba(255,255,255,0.06); z-index:5; }
+.hero__progress-bar { height:100%; width:0%; animation:progress linear forwards; }
+@keyframes progress { from{width:0%} to{width:100%} }
+
+/* Keyframes */
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.6} 50%{transform:scale(1.1);opacity:1} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+@media (max-width: 900px) {
+  .hero { flex-direction:column; text-align:center; padding:4rem 2rem 5rem; min-height:auto; gap:3rem; }
+  .hero__actions { justify-content:center; }
+  .hero__watch { width:260px; height:260px; }
+  .hero__watch-frame { width:160px; height:160px; }
+}
