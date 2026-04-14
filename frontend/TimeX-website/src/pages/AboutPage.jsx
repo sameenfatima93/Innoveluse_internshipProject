@@ -10,11 +10,11 @@ import "../styles/global.css";
 import "../styles/About.css";
 
 const TEAM = [
-  { name:"Ali Hassan",     role:"Project Lead",         initials:"AH", color:"#4f8ef7", bio:"Leads the overall project vision and ensures seamless coordination between all team members." },
-  { name:"Sara Khan",      role:"Frontend Developer",   initials:"SK", color:"#10b981", bio:"Responsible for building the UI components and ensuring a premium user experience across all pages." },
-  { name:"Usman Tariq",    role:"UI/UX Designer",       initials:"UT", color:"#f59e0b", bio:"Crafts the visual design language and user flows that make TimeX intuitive and beautiful." },
-  { name:"Fatima Sheikh",  role:"Backend Developer",    initials:"FS", color:"#ec4899", bio:"Handles data management, API integration, and ensures smooth performance of the platform." },
-  { name:"Bilal Ahmed",    role:"QA & Testing",         initials:"BA", color:"#8b5cf6", bio:"Ensures every feature works flawlessly by rigorously testing all aspects of the application." },
+  { name:"Maham Tahir",     role:"Project Lead",         initials:"MT", color:"#4f8ef7", bio:"Leads the overall project vision and ensures seamless coordination between all team members." },
+  { name:"Sameen Fatima",      role:"Frontend Developer",   initials:"SF", color:"#10b981", bio:"Responsible for building the UI components and ensuring a premium user experience across all pages." },
+  { name:"Umaima Gull",    role:"Database & Integration",       initials:"UG", color:"#f59e0b", bio:"Crafts the visual design language and user flows that make TimeX intuitive and beautiful." },
+  { name:"Affan Ahmed",  role:"Backend Developer",    initials:"AA", color:"#ec4899", bio:"Handles data management, API integration, and ensures smooth performance of the platform." },
+  { name:"Anchal Kumari",    role:"QA & Testing",         initials:"AK", color:"#8b5cf6", bio:"Ensures every feature works flawlessly by rigorously testing all aspects of the application." },
 ];
 
 const FAQS = [
