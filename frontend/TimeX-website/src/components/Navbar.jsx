@@ -24,6 +24,7 @@ export default function Navbar() {
         <Link to="/products" className={`navbar__link ${isActive("/products") ? "navbar__link--active" : ""}`} onClick={() => setMenuOpen(false)}>Products</Link>
         <Link to="/about"    className={`navbar__link ${isActive("/about")    ? "navbar__link--active" : ""}`} onClick={() => setMenuOpen(false)}>About</Link>
         <Link to="/contact"  className={`navbar__link ${isActive("/contact")  ? "navbar__link--active" : ""}`} onClick={() => setMenuOpen(false)}>Contact</Link>
+        <Link to="/login"    className={`navbar__link ${isActive("/login")    ? "navbar__link--active" : ""}`} onClick={() => setMenuOpen(false)}>Login</Link>
       </div>
 
       <div className="navbar__actions">

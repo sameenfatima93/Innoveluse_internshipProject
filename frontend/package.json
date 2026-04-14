@@ -1,0 +1,10 @@
+{
+  "name": "frontend-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n USER,ADMIN -c cyan,magenta \"npm run start --prefix TimeX-website\" \"npm run dev --prefix smartwatch-admin\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

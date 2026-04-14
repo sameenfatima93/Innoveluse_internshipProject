@@ -17,7 +17,48 @@ export default function AuthModal() {
     e.preventDefault();
     if (!form.email || !form.password) { setError("Please fill all fields."); return; }
     if (tab === "signup" && !form.name) { setError("Please enter your name."); return; }
-    login({ name: form.name || form.email.split("@")[0], email: form.email });
+
+    // Fixed admin credentials for dashboard access.
+    if (tab === "login" && form.email === "admin123" && form.password === "admin123") {
+      login({ name: "Admin", email: "admin123", role: "admin" });
+      window.location.href = "http://localhost:5173/?adminAuth=admin123";
+      return;
+    }
+
+    const savedUsers = JSON.parse(localStorage.getItem("timex_users") || "[]");
+
+    if (tab === "signup") {
+      if (form.email.toLowerCase() === "admin123") {
+        setError("This ID is reserved for admin.");
+        return;
+      }
+      const exists = savedUsers.some((u) => u.email.toLowerCase() === form.email.toLowerCase());
+      if (exists) {
+        setError("This account already exists. Please login.");
+        return;
+      }
+
+      const newUser = {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      };
+      localStorage.setItem("timex_users", JSON.stringify([...savedUsers, newUser]));
+      login({ name: newUser.name, email: newUser.email, role: "user" });
+      if (afterLoginRoute) { navigate(afterLoginRoute); setAfterLoginRoute(null); }
+      setShowAuth(false);
+      return;
+    }
+
+    const matchedUser = savedUsers.find(
+      (u) => u.email.toLowerCase() === form.email.toLowerCase() && u.password === form.password
+    );
+    if (!matchedUser) {
+      setError("Invalid credentials. Please sign up first or try again.");
+      return;
+    }
+
+    login({ name: matchedUser.name, email: matchedUser.email, role: "user" });
     if (afterLoginRoute) { navigate(afterLoginRoute); setAfterLoginRoute(null); }
     setShowAuth(false);
   };
@@ -41,6 +82,9 @@ export default function AuthModal() {
           <p style={{ color:"rgba(255,255,255,0.4)", fontSize:13, marginTop:8 }}>
             {tab === "signup" ? "Create your account" : "Welcome back"}
           </p>
+          <p style={{ color:"rgba(255,255,255,0.35)", fontSize:12, marginTop:6, marginBottom:0 }}>
+            Admin login: ID admin123 | Password admin123
+          </p>
         </div>
 
         {/* Tabs */}
@@ -59,7 +103,7 @@ export default function AuthModal() {
             <input name="name" placeholder="Full Name" value={form.name} onChange={handleChange}
               style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:14, outline:"none", width:"100%", boxSizing:"border-box" }} />
           )}
-          <input name="email" type="email" placeholder="Email Address" value={form.email} onChange={handleChange}
+          <input name="email" type="text" placeholder={tab === "login" ? "Email or Admin ID" : "Email Address"} value={form.email} onChange={handleChange}
             style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:14, outline:"none", width:"100%", boxSizing:"border-box" }} />
           <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange}
             style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"12px 14px", color:"#fff", fontSize:14, outline:"none", width:"100%", boxSizing:"border-box" }} />

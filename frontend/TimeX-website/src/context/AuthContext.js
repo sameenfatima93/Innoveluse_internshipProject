@@ -3,16 +3,28 @@ import React, { createContext, useContext, useState } from "react";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // null = guest
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem("timex_user");
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  }); // null = guest
   const [showAuth, setShowAuth] = useState(false);
   const [afterLoginRoute, setAfterLoginRoute] = useState(null);
 
   const login = (userData) => {
     setUser(userData);
+    localStorage.setItem("timex_user", JSON.stringify(userData));
     setShowAuth(false);
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("timex_user");
+    localStorage.removeItem("timex_admin_auth");
+  };
 
   const requireLogin = (route) => {
     if (user) return true;

@@ -8,6 +8,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import AboutPage         from "./pages/AboutPage";
 import ContactPage       from "./pages/ContactPage";
 import CheckoutPage      from "./pages/CheckoutPage";
+import LoginPage         from "./pages/LoginPage";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/about"       element={<AboutPage />} />
             <Route path="/contact"     element={<ContactPage />} />
             <Route path="/checkout"    element={<CheckoutPage />} />
+            <Route path="/login"       element={<LoginPage />} />
           </Routes>
         </BrowserRouter>
       </CartProvider>
