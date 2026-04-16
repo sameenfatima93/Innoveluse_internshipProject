@@ -1,40 +1,118 @@
-import { createContext, useContext, useState } from 'react';
-import { products as initialProducts, orders as initialOrders, users as initialUsers, coupons as initialCoupons, notifications as initialNotifications } from '../data/mockData';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const AdminContext = createContext();
+const API_BASE = 'http://localhost:5000/api';
 
 export function AdminProvider({ children }) {
-  const [products, setProducts] = useState(initialProducts);
-  const [orders, setOrders] = useState(initialOrders);
-  const [users, setUsers] = useState(initialUsers);
-  const [coupons, setCoupons] = useState(initialCoupons);
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const loadData = async () => {
+    try {
+      const [productsRes, ordersRes, usersRes, couponsRes, notificationsRes] = await Promise.all([
+        fetch(`${API_BASE}/products`),
+        fetch(`${API_BASE}/orders`),
+        fetch(`${API_BASE}/users`),
+        fetch(`${API_BASE}/coupons`),
+        fetch(`${API_BASE}/notifications`),
+      ]);
+
+      const [productsPayload, ordersPayload, usersPayload, couponsPayload, notificationsPayload] = await Promise.all([
+        productsRes.json(),
+        ordersRes.json(),
+        usersRes.json(),
+        couponsRes.json(),
+        notificationsRes.json(),
+      ]);
+
+      setProducts(productsPayload.data || []);
+      setOrders(ordersPayload.data || []);
+      setUsers(usersPayload.data || []);
+      setCoupons(couponsPayload.data || []);
+      setNotifications(notificationsPayload.data || []);
+    } catch {
+      // Keep previous state if backend is temporarily unavailable.
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+    const timer = setInterval(loadData, 8000);
+    return () => clearInterval(timer);
+  }, []);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-
-  const updateOrderStatus = (id, status) => {
-    setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
+  const markAllRead = async () => {
+    await fetch(`${API_BASE}/notifications/mark-all-read`, { method: 'POST' });
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  const deleteProduct = (id) => setProducts(prev => prev.filter(p => p.id !== id));
+  const updateOrderStatus = async (id, status) => {
+    const res = await fetch(`${API_BASE}/orders/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
 
-  const updateUserStatus = (id, status) => {
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, status } : u));
+    if (res.ok) {
+      setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
+    }
   };
 
-  const deleteCoupon = (id) => setCoupons(prev => prev.filter(c => c.id !== id));
-
-  const addProduct = (product) => {
-    const id = 'P' + String(products.length + 1).padStart(3, '0');
-    setProducts(prev => [{ ...product, id, sold: 0, rating: 0 }, ...prev]);
+  const deleteProduct = async (id) => {
+    const res = await fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' });
+    if (res.ok) setProducts(prev => prev.filter(p => p.id !== id));
   };
 
-  const addCoupon = (coupon) => {
-    const id = 'C' + String(coupons.length + 1).padStart(3, '0');
-    setCoupons(prev => [{ ...coupon, id, usedCount: 0 }, ...prev]);
+  const updateProduct = async (id, product) => {
+    const res = await fetch(`${API_BASE}/products/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product),
+    });
+    const payload = await res.json();
+    if (res.ok) {
+      setProducts(prev => prev.map(p => p.id === id ? payload.data : p));
+    }
+  };
+
+  const updateUserStatus = async (id, status) => {
+    const res = await fetch(`${API_BASE}/users/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    if (res.ok) setUsers(prev => prev.map(u => u.id === id ? { ...u, status } : u));
+  };
+
+  const deleteCoupon = async (id) => {
+    const res = await fetch(`${API_BASE}/coupons/${id}`, { method: 'DELETE' });
+    if (res.ok) setCoupons(prev => prev.filter(c => c.id !== id));
+  };
+
+  const addProduct = async (product) => {
+    const res = await fetch(`${API_BASE}/products`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product),
+    });
+    const payload = await res.json();
+    if (res.ok) setProducts(prev => [payload.data, ...prev]);
+  };
+
+  const addCoupon = async (coupon) => {
+    const res = await fetch(`${API_BASE}/coupons`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(coupon),
+    });
+    const payload = await res.json();
+    if (res.ok) setCoupons(prev => [payload.data, ...prev]);
   };
 
   return (
@@ -42,7 +120,7 @@ export function AdminProvider({ children }) {
       products, setProducts, orders, users, coupons, notifications,
       sidebarOpen, setSidebarOpen, unreadCount, markAllRead,
       updateOrderStatus, deleteProduct, updateUserStatus, deleteCoupon,
-      addProduct, addCoupon,
+      addProduct, addCoupon, updateProduct,
     }}>
       {children}
     </AdminContext.Provider>

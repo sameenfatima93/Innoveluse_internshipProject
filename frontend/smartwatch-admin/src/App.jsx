@@ -13,30 +13,60 @@ function AdminLoginGate({ children }) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [authenticated, setAuthenticated] = useState(() => localStorage.getItem('timex_admin_auth') === 'true');
+  const [checking, setChecking] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const oneTimeAuth = params.get('adminAuth');
-    if (oneTimeAuth === 'admin123') {
-      localStorage.setItem('timex_admin_auth', 'true');
-      setAuthenticated(true);
-      params.delete('adminAuth');
-      const next = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash}`;
-      window.history.replaceState({}, '', next);
-    }
+    const verify = async () => {
+      const token = localStorage.getItem('timex_admin_token');
+      if (!token) {
+        setChecking(false);
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/admin-verify', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setAuthenticated(res.ok);
+      } catch {
+        setAuthenticated(false);
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    verify();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (id === 'admin123' && password === 'admin123') {
-      localStorage.setItem('timex_admin_auth', 'true');
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, password }),
+      });
+      const payload = await res.json();
+      if (!res.ok) {
+        setError(payload.message || 'Invalid admin credentials.');
+        return;
+      }
+      localStorage.setItem('timex_admin_token', payload.data.token);
       setAuthenticated(true);
       setError('');
-      return;
+    } catch {
+      setError('Unable to login. Please try again.');
     }
-    setError('Invalid admin credentials.');
   };
+
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white grid place-items-center">
+        <p className="text-slate-300">Checking admin session...</p>
+      </div>
+    );
+  }
 
   if (authenticated) return children;
 
@@ -44,7 +74,7 @@ function AdminLoginGate({ children }) {
     <div className="min-h-screen bg-slate-950 text-white grid place-items-center p-6">
       <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
         <h1 className="text-2xl font-bold mb-2">Admin Login</h1>
-        <p className="text-slate-400 text-sm mb-6">Use the admin credentials to access dashboard.</p>
+        <p className="text-slate-400 text-sm mb-6">Sign in with your admin credentials.</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -64,7 +94,6 @@ function AdminLoginGate({ children }) {
           <button type="submit" className="w-full rounded-lg bg-sky-600 hover:bg-sky-500 py-2 font-semibold">
             Sign In
           </button>
-          <p className="text-xs text-slate-500 text-center">ID: admin123 | Password: admin123</p>
         </form>
       </div>
     </div>

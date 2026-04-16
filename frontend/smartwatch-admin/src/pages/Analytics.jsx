@@ -1,8 +1,8 @@
 import Layout from '../components/Layout';
-import { revenueData, categoryData, products } from '../data/mockData';
+import { useAdmin } from '../context/AdminContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line
+  PieChart, Pie, Cell
 } from 'recharts';
 import { TrendingUp, Package, ShoppingCart, DollarSign } from 'lucide-react';
 
@@ -22,12 +22,36 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-const topProducts = [...products].sort((a, b) => b.sold - a.sold).slice(0, 5);
-
 export default function Analytics() {
+  const { products, orders } = useAdmin();
+
+  const monthMap = {};
+  orders.forEach((o) => {
+    const d = o.date || new Date().toISOString().slice(0, 10);
+    const month = new Date(d).toLocaleString('en-US', { month: 'short' });
+    if (!monthMap[month]) monthMap[month] = { month, revenue: 0, orders: 0 };
+    monthMap[month].revenue += Number(o.amount || 0);
+    monthMap[month].orders += 1;
+  });
+  const revenueData = Object.values(monthMap);
+
+  const categoryCount = products.reduce((acc, p) => {
+    const c = p.category || 'other';
+    acc[c] = (acc[c] || 0) + 1;
+    return acc;
+  }, {});
+  const palette = ['#0ea5e9', '#8b5cf6', '#f59e0b', '#10b981', '#f43f5e'];
+  const categoryData = Object.entries(categoryCount).map(([name, value], i) => ({
+    name,
+    value,
+    color: palette[i % palette.length],
+  }));
+
+  const topProducts = [...products].sort((a, b) => Number(b.sold || 0) - Number(a.sold || 0)).slice(0, 5);
+
   const totalRevenue = revenueData.reduce((sum, d) => sum + d.revenue, 0);
   const totalOrders = revenueData.reduce((sum, d) => sum + d.orders, 0);
-  const avgOrderValue = Math.round(totalRevenue / totalOrders);
+  const avgOrderValue = totalOrders ? Math.round(totalRevenue / totalOrders) : 0;
 
   return (
     <Layout title="Analytics">

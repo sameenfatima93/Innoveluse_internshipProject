@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import Cart from "../components/Cart";
 import AuthModal from "../components/AuthModal";
 import { useAuth } from "../context/AuthContext";
-import { products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import "../styles/global.css";
 import "../styles/About.css";
 
@@ -29,6 +29,7 @@ const FAQS = [
 export default function AboutPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const { showAuth } = useAuth();
+  const { products } = useProducts();
 
   return (
     <div style={{ minHeight:"100vh", background:"#08080f" }}>

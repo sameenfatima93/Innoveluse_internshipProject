@@ -6,7 +6,7 @@ import Cart from "../components/Cart";
 import AuthModal from "../components/AuthModal";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import "../styles/ProductDetail.css";
 import "../styles/global.css";
 
@@ -64,6 +64,7 @@ export default function ProductDetailPage() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { requireLogin, showAuth } = useAuth();
+  const { products } = useProducts();
   const [added, setAdded] = useState(false);
   
 

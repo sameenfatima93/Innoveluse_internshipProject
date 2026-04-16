@@ -1,0 +1,79 @@
+const seedData = {
+  users: [],
+  products: [
+    {
+      id: "P001",
+      name: "Samsung Galaxy Watch 6 Classic",
+      brand: "Samsung",
+      category: "mens",
+      price: 89999,
+      oldPrice: 109999,
+      rating: 4.8,
+      badge: "hot",
+      color: "#0a1628",
+      accent: "#4f8ef7",
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80",
+      description: "Premium smartwatch with rotating bezel and health tracking.",
+      features: ["ECG", "Sleep Tracking", "GPS"],
+      status: "active",
+      stock: 84,
+      sold: 312,
+      isBestSeller: true
+    },
+    {
+      id: "P002",
+      name: "Apple Watch Series 9",
+      brand: "Apple",
+      category: "wrist",
+      price: 129999,
+      oldPrice: 149999,
+      rating: 4.9,
+      badge: "new",
+      color: "#1a1a2e",
+      accent: "#a0a0b0",
+      image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&q=80",
+      description: "Powerful Apple smartwatch with S9 chip.",
+      features: ["S9 Chip", "ECG", "Always-on Display"],
+      status: "active",
+      stock: 52,
+      sold: 289,
+      isBestSeller: true
+    },
+    {
+      id: "P003",
+      name: "Fitbit Sense 2",
+      brand: "Fitbit",
+      category: "womens",
+      price: 44999,
+      oldPrice: 54999,
+      rating: 4.5,
+      badge: "",
+      color: "#0a1a15",
+      accent: "#34d399",
+      image: "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=500&q=80",
+      description: "Health smartwatch with stress and sleep tracking.",
+      features: ["Stress Tracker", "Sleep Score", "SpO2"],
+      status: "active",
+      stock: 96,
+      sold: 202,
+      isBestSeller: true
+    }
+  ],
+  orders: [],
+  coupons: [
+    {
+      id: "C001",
+      code: "WELCOME10",
+      type: "percentage",
+      value: 10,
+      minOrder: 5000,
+      usageLimit: 200,
+      usedCount: 0,
+      expiry: "2026-12-31",
+      status: "active"
+    }
+  ],
+  notifications: [],
+};
+
+module.exports = seedData;

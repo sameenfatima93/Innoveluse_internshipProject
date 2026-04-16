@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
     } finally {
       setUser(null);
       localStorage.removeItem("timex_user");
-      localStorage.removeItem("timex_admin_auth");
+      localStorage.removeItem("timex_admin_token");
     }
   };
 

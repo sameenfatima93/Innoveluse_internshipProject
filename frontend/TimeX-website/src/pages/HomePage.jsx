@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { bestSellers } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import "../styles/global.css";
 import "../styles/App.css";
 import "../styles/HomePage.css";
@@ -92,8 +92,11 @@ function ProductCard({ product }) {
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState("all");
   const { showAuth } = useAuth();
+  const { products } = useProducts();
 
-  const filtered = activeTab === "all" ? bestSellers : bestSellers.filter(p => p.category === activeTab);
+  const bestSellers = products.filter((p) => p.isBestSeller);
+
+  const filtered = activeTab === "all" ? bestSellers : bestSellers.filter((p) => p.category === activeTab);
 
   return (
     <div>

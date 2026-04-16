@@ -43,13 +43,44 @@ export default function CheckoutPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(null);
+  const isCartEmpty = cartItems.length === 0;
 
   const handleChange = e => setForm(p=>({...p,[e.target.name]:e.target.value}));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isCartEmpty) {
+      alert("Your cart is empty. Please add at least one product before confirming order.");
+      navigate("/products");
+      return;
+    }
     setLoading(true);
-    setTimeout(() => { setLoading(false); setShowSuccess(true); clearCart(); }, 1500);
+    try {
+      const res = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user,
+          items: cartItems,
+          amount: grandTotal,
+          shippingAddress: form.address,
+          city: form.city,
+          phone: form.phone,
+          paymentMethod: form.payment,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to place order");
+      }
+
+      setShowSuccess(true);
+      clearCart();
+    } catch (err) {
+      alert(err.message || "Order failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSuccessClose = () => { setShowSuccess(false); navigate("/"); };
@@ -123,8 +154,8 @@ export default function CheckoutPage() {
             </div>
 
             {/* Submit */}
-            <button type="submit" disabled={loading} style={{ background:"linear-gradient(135deg,#4f8ef7,#6366f1)", color:"#fff", border:"none", borderRadius:16, padding:"16px", fontSize:16, fontWeight:700, cursor:loading?"not-allowed":"pointer", opacity:loading?0.8:1, boxShadow:"0 8px 32px rgba(79,142,247,0.3)", transition:"opacity 0.2s" }}>
-              {loading ? "Placing Order..." : "Confirm Order →"}
+            <button type="submit" disabled={loading || isCartEmpty} style={{ background:"linear-gradient(135deg,#4f8ef7,#6366f1)", color:"#fff", border:"none", borderRadius:16, padding:"16px", fontSize:16, fontWeight:700, cursor:(loading || isCartEmpty)?"not-allowed":"pointer", opacity:(loading || isCartEmpty)?0.6:1, boxShadow:"0 8px 32px rgba(79,142,247,0.3)", transition:"opacity 0.2s" }}>
+              {loading ? "Placing Order..." : isCartEmpty ? "Add Items To Cart First" : "Confirm Order →"}
             </button>
             <p style={{ textAlign:"center", color:"rgba(255,255,255,0.3)", fontSize:12, margin:0 }}>
               🔒 Your order will be processed securely

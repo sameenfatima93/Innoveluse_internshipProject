@@ -1,8 +1,8 @@
 import Layout from '../components/Layout';
-import { dashboardStats, revenueData, categoryData, recentActivity, orders } from '../data/mockData';
+import { useAdmin } from '../context/AdminContext';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend
+  PieChart, Pie, Cell
 } from 'recharts';
 import { TrendingUp, TrendingDown, ShoppingCart, Package, Users, DollarSign, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -40,7 +40,52 @@ const CustomTooltip = ({ active, payload, label }) => {
 const typeIcon = { order: '🛒', product: '📦', coupon: '🏷️', user: '👤' };
 
 export default function Dashboard() {
+  const { orders, users, products, coupons, notifications } = useAdmin();
   const recentOrders = orders.slice(0, 5);
+
+  const totalRevenue = orders.reduce((sum, o) => sum + Number(o.amount || 0), 0);
+  const deliveredOrders = orders.filter((o) => o.status === 'delivered').length;
+  const activeUsers = users.filter((u) => u.status === 'active').length;
+
+  const dashboardStats = {
+    totalRevenue,
+    totalOrders: orders.length,
+    totalProducts: products.length,
+    activeUsers,
+    revenueGrowth: 12.6,
+    ordersGrowth: 8.4,
+    productsGrowth: 5.1,
+    usersGrowth: 6.9,
+  };
+
+  const monthMap = {};
+  orders.forEach((o) => {
+    const key = o.date || new Date().toISOString().slice(0, 10);
+    const month = new Date(key).toLocaleString('en-US', { month: 'short' });
+    if (!monthMap[month]) monthMap[month] = { month, revenue: 0, orders: 0 };
+    monthMap[month].revenue += Number(o.amount || 0);
+    monthMap[month].orders += 1;
+  });
+  const revenueData = Object.values(monthMap);
+
+  const categoryCount = products.reduce((acc, p) => {
+    const c = p.category || 'other';
+    acc[c] = (acc[c] || 0) + 1;
+    return acc;
+  }, {});
+  const palette = ['#0ea5e9', '#8b5cf6', '#f59e0b', '#10b981', '#f43f5e'];
+  const categoryData = Object.entries(categoryCount).map(([name, value], i) => ({
+    name,
+    value,
+    color: palette[i % palette.length],
+  }));
+
+  const recentActivity = notifications.slice(0, 5).map((n) => ({
+    action: n.message,
+    detail: n.type,
+    time: n.time,
+    type: n.type,
+  }));
 
   const statusColor = {
     delivered: 'bg-emerald-600/20 text-emerald-400',
@@ -110,7 +155,7 @@ export default function Dashboard() {
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: c.color }} />
                   <span className="text-slate-400">{c.name}</span>
                 </div>
-                <span className="text-white font-medium">{c.value}%</span>
+                <span className="text-white font-medium">{c.value}</span>
               </div>
             ))}
           </div>

@@ -107,7 +107,7 @@ function ProductModal({ product, onClose, onSave }) {
 }
 
 export default function Products() {
-  const { products, deleteProduct, addProduct } = useAdmin();
+  const { products, deleteProduct, addProduct, updateProduct } = useAdmin();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
   const [modal, setModal] = useState(null); // null | 'add' | product object
@@ -226,7 +226,7 @@ export default function Products() {
         <ProductModal
           product={modal === 'add' ? null : modal}
           onClose={() => setModal(null)}
-          onSave={modal === 'add' ? addProduct : () => {}}
+          onSave={modal === 'add' ? addProduct : (data) => updateProduct(modal.id, data)}
         />
       )}
 

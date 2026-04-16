@@ -6,7 +6,7 @@ import Cart from "../components/Cart";
 import AuthModal from "../components/AuthModal";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import "../styles/global.css";
 import "../styles/ProductsPage.css";
 
@@ -83,6 +83,7 @@ function ProductCard({ product }) {
 
 export default function ProductsPage() {
   const { showAuth } = useAuth();
+  const { products } = useProducts();
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery,  setSearchQuery]  = useState("");
   const [sortBy,       setSortBy]       = useState("default");

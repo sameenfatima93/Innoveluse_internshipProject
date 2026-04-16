@@ -2,6 +2,11 @@
 const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/auth.routes");
+const usersRoutes = require("./routes/users.routes");
+const ordersRoutes = require("./routes/orders.routes");
+const productsRoutes = require("./routes/products.routes");
+const couponsRoutes = require("./routes/coupons.routes");
+const notificationsRoutes = require("./routes/notifications.routes");
 
 const app = express();
 
@@ -28,5 +33,10 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/users", usersRoutes);
+app.use("/api/orders", ordersRoutes);
+app.use("/api/products", productsRoutes);
+app.use("/api/coupons", couponsRoutes);
+app.use("/api/notifications", notificationsRoutes);
 
 module.exports = app;
