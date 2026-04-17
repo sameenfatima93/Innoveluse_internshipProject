@@ -76,7 +76,7 @@ export const products = [
   {
     id: "9", name: "Garmin Lily 2", brand: "Garmin", category: "womens",
     price: 39999, oldPrice: 47999, rating: 4.4, badge: "new", color: "#0a0a1a", accent: "#c084fc",
-    image: "https://images.unsplash.com/photo-1542496658-e33a6d0d787f?w=500&q=80",
+    image: "https://images.unsplash.com/photo-1557906757-541777a3e36b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description: "Stylish small-sized smartwatch for women with patterned lens and health tracking features.",
     fullDescription: "Garmin Lily 2 is crafted for women who want a watch that looks as good as it performs. The small, fashionable design features an intricate patterned lens that doubles as a beautiful accessory. Beneath its elegant exterior lies powerful health tracking including Pulse Ox, sleep monitoring, women's health features, and stress tracking.",
     features: ["Stylish 34mm Case", "Patterned Lens", "Women's Health", "Pulse Ox", "5-Day Battery", "Hydration Tracking"],
