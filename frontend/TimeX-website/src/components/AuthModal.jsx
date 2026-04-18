@@ -20,7 +20,7 @@ export default function AuthModal() {
 
     // Admin login is validated by backend and returns a session token.
     if (tab === "login" && !form.email.includes("@")) {
-      const adminRes = await fetch("http://localhost:5000/api/auth/admin-login", {
+      const adminRes = await fetch("http://localhost:5001/api/auth/admin-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: form.email, password: form.password }),
@@ -44,7 +44,7 @@ export default function AuthModal() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("http://localhost:5001/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -65,7 +65,7 @@ export default function AuthModal() {
       return;
     }
 
-    const res = await fetch("http://localhost:5000/api/auth/login", {
+    const res = await fetch("http://localhost:5001/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: form.email, password: form.password }),

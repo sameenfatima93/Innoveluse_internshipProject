@@ -5,13 +5,15 @@ import { Search, Filter, Eye, X, ChevronDown } from 'lucide-react';
 
 const statusColor = {
   delivered: 'bg-emerald-600/20 text-emerald-400',
-  shipped: 'bg-brand-600/20 text-brand-400',
-  processing: 'bg-amber-600/20 text-amber-400',
+  out_for_delivery: 'bg-brand-600/20 text-brand-400',
+  packed: 'bg-amber-600/20 text-amber-400',
   pending: 'bg-slate-600/20 text-slate-400',
   cancelled: 'bg-red-600/20 text-red-400',
 };
 
-const allStatuses = ['delivered', 'shipped', 'processing', 'pending', 'cancelled'];
+const allStatuses = ['pending', 'packed', 'out_for_delivery', 'delivered'];
+
+const statusLabel = (status) => status.replaceAll('_', ' ');
 
 function OrderModal({ order, onClose, onUpdateStatus }) {
   return (
@@ -29,7 +31,7 @@ function OrderModal({ order, onClose, onUpdateStatus }) {
                 <p className="text-brand-400 font-mono font-bold">{order.id}</p>
                 <p className="text-slate-500 text-xs mt-0.5">{order.date}</p>
               </div>
-              <span className={`badge ${statusColor[order.status]}`}>{order.status}</span>
+              <span className={`badge ${statusColor[order.status] || 'bg-slate-600/20 text-slate-400'} capitalize`}>{statusLabel(order.status)}</span>
             </div>
           </div>
           <div className="glass rounded-xl p-4">
@@ -62,7 +64,7 @@ function OrderModal({ order, onClose, onUpdateStatus }) {
                       ? `${statusColor[s]} border-current`
                       : 'bg-white/5 border-white/10 text-slate-500 hover:text-white hover:border-white/20'
                   }`}>
-                  {s}
+                  <span className="capitalize">{statusLabel(s)}</span>
                 </button>
               ))}
             </div>
@@ -104,7 +106,7 @@ export default function Orders() {
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border capitalize ${
               statusFilter === s ? `${statusColor[s]} border-current` : 'glass text-slate-400 hover:text-white border-transparent'
             }`}>
-            {s} <span className="ml-1 text-xs opacity-70">{counts[s]}</span>
+            <span className="capitalize">{statusLabel(s)}</span> <span className="ml-1 text-xs opacity-70">{counts[s]}</span>
           </button>
         ))}
       </div>
@@ -151,7 +153,7 @@ export default function Orders() {
                   <td className="px-4 py-3 text-white font-semibold">${order.amount}</td>
                   <td className="px-4 py-3 text-slate-500 text-xs">{order.date}</td>
                   <td className="px-4 py-3">
-                    <span className={`badge ${statusColor[order.status]} capitalize`}>{order.status}</span>
+                    <span className={`badge ${statusColor[order.status] || 'bg-slate-600/20 text-slate-400'} capitalize`}>{statusLabel(order.status)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <button onClick={() => setSelectedOrder(order)}

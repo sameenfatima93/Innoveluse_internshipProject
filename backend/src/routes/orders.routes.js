@@ -14,7 +14,17 @@ function generateOrderId(existingOrders) {
 
 router.get("/", (req, res) => {
   const db = readDb();
-  res.json({ success: true, data: db.orders });
+  const { userEmail, userId } = req.query;
+
+  let orders = db.orders;
+  if (userEmail) {
+    orders = orders.filter((o) => (o.email || "").toLowerCase() === String(userEmail).toLowerCase());
+  }
+  if (userId) {
+    orders = orders.filter((o) => String(o.userId || "") === String(userId));
+  }
+
+  res.json({ success: true, data: orders });
 });
 
 router.post("/", (req, res) => {
@@ -74,7 +84,7 @@ router.post("/", (req, res) => {
 router.patch("/:id/status", (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
-  const allowed = ["delivered", "shipped", "processing", "pending", "cancelled"];
+  const allowed = ["pending", "packed", "out_for_delivery", "delivered", "cancelled"];
 
   if (!allowed.includes(status)) {
     return res.status(400).json({ success: false, message: "Invalid status" });

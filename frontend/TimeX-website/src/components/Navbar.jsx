@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
@@ -7,6 +7,7 @@ import "../styles/Navbar.css";
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -64,6 +65,15 @@ export default function Navbar() {
             </button>
             <div className={`navbar__dropdown ${profileOpen ? "navbar__dropdown--open" : ""}`}>
               <p className="navbar__dropdown-name">Hi, {user.name}!</p>
+              <button
+                className="navbar__dropdown-link"
+                onClick={() => {
+                  setProfileOpen(false);
+                  navigate("/orders");
+                }}
+              >
+                My Orders
+              </button>
               <button
                 className="navbar__dropdown-logout"
                 onClick={async () => {

@@ -17,7 +17,7 @@ export default function Topbar({ title }) {
   const handleAdminLogout = async () => {
     const token = localStorage.getItem('timex_admin_token');
     try {
-      await fetch('http://localhost:5000/api/auth/logout', {
+      await fetch('http://localhost:5001/api/auth/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

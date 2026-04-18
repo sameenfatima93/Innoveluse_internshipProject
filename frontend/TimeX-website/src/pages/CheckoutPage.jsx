@@ -56,7 +56,7 @@ export default function CheckoutPage() {
     }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/orders", {
+      const res = await fetch("http://localhost:5001/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,7 +83,7 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleSuccessClose = () => { setShowSuccess(false); navigate("/"); };
+  const handleSuccessClose = () => { setShowSuccess(false); navigate("/orders"); };
 
   const deliveryFee = cartTotal >= 5000 ? 0 : 200;
   const grandTotal = cartTotal + deliveryFee;
