@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { ADMIN_APP_URL, API_BASE, useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 
@@ -12,29 +12,45 @@ export default function AuthModal() {
 
   const close = () => { setShowAuth(false); setAfterLoginRoute(null); };
   const handleChange = e => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
+  const navigateAfterLogin = () => {
+    if (!afterLoginRoute?.pathname) {
+      return;
+    }
+    navigate(afterLoginRoute.pathname, { state: afterLoginRoute.state });
+    setAfterLoginRoute(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.email || !form.password) { setError("Please fill all fields."); return; }
+    const emailOrId = form.email.trim();
+    const password = form.password.trim();
+
+    if (!emailOrId || !password) { setError("Please fill all fields."); return; }
     if (tab === "signup" && !form.name) { setError("Please enter your name."); return; }
 
     // Admin login is validated by backend and returns a session token.
-    if (tab === "login" && !form.email.includes("@")) {
-      const adminRes = await fetch("http://localhost:5001/api/auth/admin-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: form.email, password: form.password }),
-      });
-      const adminPayload = await adminRes.json();
-      if (!adminRes.ok) {
-        setError(adminPayload.message || "Invalid admin credentials");
-        return;
-      }
+    if (tab === "login" && !emailOrId.includes("@")) {
+      try {
+        const adminRes = await fetch(`${API_BASE}/auth/admin-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: emailOrId, password }),
+        });
+        const adminPayload = await adminRes.json();
+        if (!adminRes.ok) {
+          setError(adminPayload.message || "Invalid admin credentials");
+          return;
+        }
 
-      localStorage.removeItem("timex_user");
-      localStorage.setItem("timex_admin_token", adminPayload.data.token);
-      setShowAuth(false);
-      window.location.href = "http://localhost:5173";
+        localStorage.removeItem("timex_user");
+        setShowAuth(false);
+
+        const redirectUrl = new URL(ADMIN_APP_URL);
+        redirectUrl.searchParams.set("adminToken", adminPayload.data.token);
+        window.location.href = redirectUrl.toString();
+      } catch {
+        setError("Unable to login. Please try again.");
+      }
       return;
     }
 
@@ -44,13 +60,13 @@ export default function AuthModal() {
         return;
       }
 
-      const res = await fetch("http://localhost:5001/api/auth/register", {
+      const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
-          email: form.email,
-          password: form.password,
+          email: emailOrId,
+          password,
         }),
       });
       const payload = await res.json();
@@ -60,15 +76,15 @@ export default function AuthModal() {
       }
 
       login(payload.data);
-      if (afterLoginRoute) { navigate(afterLoginRoute); setAfterLoginRoute(null); }
+      navigateAfterLogin();
       setShowAuth(false);
       return;
     }
 
-    const res = await fetch("http://localhost:5001/api/auth/login", {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: form.email, password: form.password }),
+      body: JSON.stringify({ email: emailOrId, password }),
     });
     const payload = await res.json();
     if (!res.ok) {
@@ -77,13 +93,13 @@ export default function AuthModal() {
     }
 
     login(payload.data);
-    if (afterLoginRoute) { navigate(afterLoginRoute); setAfterLoginRoute(null); }
+    navigateAfterLogin();
     setShowAuth(false);
   };
 
   const handleGuest = () => {
     login({ name: "Guest", email: "guest@chronostore.pk" });
-    if (afterLoginRoute) { navigate(afterLoginRoute); setAfterLoginRoute(null); }
+    navigateAfterLogin();
     setShowAuth(false);
   };
 

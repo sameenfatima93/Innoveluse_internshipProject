@@ -5,7 +5,76 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const { readDb, updateDb } = require("../utils/store");
 
-const adminSessions = new Set();
+const ADMIN_TOKEN_TTL_SECONDS = Number(process.env.ADMIN_TOKEN_TTL_SECONDS || 60 * 60 * 24);
+const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || "timex-admin-secret-change-me";
+
+function toBase64Url(input) {
+  return Buffer.from(input)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function fromBase64Url(input) {
+  const normalized = input.replace(/-/g, "+").replace(/_/g, "/");
+  const padding = (4 - (normalized.length % 4)) % 4;
+  return Buffer.from(`${normalized}${"=".repeat(padding)}`, "base64").toString("utf8");
+}
+
+function signValue(value) {
+  return crypto
+    .createHmac("sha256", ADMIN_TOKEN_SECRET)
+    .update(value)
+    .digest("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function createAdminToken() {
+  const payload = {
+    role: "admin",
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + ADMIN_TOKEN_TTL_SECONDS,
+  };
+
+  const encodedPayload = toBase64Url(JSON.stringify(payload));
+  const signature = signValue(encodedPayload);
+  return `${encodedPayload}.${signature}`;
+}
+
+function verifyAdminToken(token) {
+  if (!token || typeof token !== "string") {
+    return false;
+  }
+
+  const parts = token.split(".");
+  if (parts.length !== 2) {
+    return false;
+  }
+
+  const [encodedPayload, signature] = parts;
+  const expectedSignature = signValue(encodedPayload);
+
+  const providedSignatureBuffer = Buffer.from(signature);
+  const expectedSignatureBuffer = Buffer.from(expectedSignature);
+  if (providedSignatureBuffer.length !== expectedSignatureBuffer.length) {
+    return false;
+  }
+
+  if (!crypto.timingSafeEqual(providedSignatureBuffer, expectedSignatureBuffer)) {
+    return false;
+  }
+
+  try {
+    const payload = JSON.parse(fromBase64Url(encodedPayload));
+    const now = Math.floor(Date.now() / 1000);
+    return payload.role === "admin" && Number(payload.exp) > now;
+  } catch {
+    return false;
+  }
+}
 
 function toAvatar(name = "U") {
   return name.slice(0, 2).toUpperCase();
@@ -126,12 +195,6 @@ router.post("/login", async (req, res) => {
 router.post("/logout", (req, res) => {
   const role = req.body?.role || "user";
 
-  if (role === "admin") {
-    const authHeader = req.headers.authorization || "";
-    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
-    if (token) adminSessions.delete(token);
-  }
-
   return res.status(200).json({
     success: true,
     message: `${role} logged out successfully`,
@@ -147,8 +210,7 @@ router.post("/admin-login", (req, res) => {
     return res.status(401).json({ success: false, message: "Invalid admin credentials" });
   }
 
-  const token = crypto.randomBytes(24).toString("hex");
-  adminSessions.add(token);
+  const token = createAdminToken();
 
   return res.json({
     success: true,
@@ -168,7 +230,7 @@ router.get("/admin-verify", (req, res) => {
   const authHeader = req.headers.authorization || "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
-  if (!token || !adminSessions.has(token)) {
+  if (!verifyAdminToken(token)) {
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 

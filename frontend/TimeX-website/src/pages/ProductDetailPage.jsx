@@ -29,7 +29,13 @@ function SimilarCard({ product }) {
   const [added, setAdded] = useState(false);
 
   const handleAdd = (e) => { e.stopPropagation(); addToCart(product); setAdded(true); setTimeout(()=>setAdded(false),1400); };
-  const handleBuy = (e) => { e.stopPropagation(); if(requireLogin("/checkout")){ addToCart(product); navigate("/checkout"); } };
+  const handleBuy = (e) => {
+    e.stopPropagation();
+    const checkoutRoute = { pathname: "/checkout", state: { buyNowItem: { ...product, qty: 1 } } };
+    if (requireLogin(checkoutRoute)) {
+      navigate(checkoutRoute.pathname, { state: checkoutRoute.state });
+    }
+  };
 
   return (
     <div className="sim-card" onClick={() => { navigate(`/product/${product.id}`); window.scrollTo(0,0); }}>
@@ -88,7 +94,12 @@ export default function ProductDetailPage() {
   const discount = product.oldPrice > 0 ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : null;
 
   const handleAddToCart = () => { addToCart(product); setAdded(true); setTimeout(()=>setAdded(false),1500); };
-  const handleBuyNow = () => { if(requireLogin("/checkout")){ addToCart(product); navigate("/checkout"); } };
+  const handleBuyNow = () => {
+    const checkoutRoute = { pathname: "/checkout", state: { buyNowItem: { ...product, qty: 1 } } };
+    if (requireLogin(checkoutRoute)) {
+      navigate(checkoutRoute.pathname, { state: checkoutRoute.state });
+    }
+  };
 
   return (
     <div className="detail-page">

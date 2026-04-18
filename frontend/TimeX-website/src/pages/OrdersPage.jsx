@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useAuth } from "../context/AuthContext";
+import { API_BASE, useAuth } from "../context/AuthContext";
 import "../styles/global.css";
 
 const STATUS_META = {
@@ -74,7 +74,7 @@ export default function OrdersPage() {
     const loadOrders = async (firstLoad = false) => {
       if (firstLoad) setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5001/api/orders?userEmail=${encodeURIComponent(user.email)}`);
+        const res = await fetch(`${API_BASE}/orders?userEmail=${encodeURIComponent(user.email)}`);
         const payload = await res.json();
         if (!res.ok) throw new Error(payload.message || "Unable to load orders");
         if (active) {

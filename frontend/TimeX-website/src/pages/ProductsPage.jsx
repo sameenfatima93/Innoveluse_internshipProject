@@ -32,9 +32,9 @@ function ProductCard({ product }) {
 
   const handleBuy = (e) => {
     e.stopPropagation();
-    if (requireLogin("/checkout")) {
-      addToCart(product);
-      navigate("/checkout");
+    const checkoutRoute = { pathname: "/checkout", state: { buyNowItem: { ...product, qty: 1 } } };
+    if (requireLogin(checkoutRoute)) {
+      navigate(checkoutRoute.pathname, { state: checkoutRoute.state });
     }
   };
 

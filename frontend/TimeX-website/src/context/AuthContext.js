@@ -2,6 +2,17 @@ import React, { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
 
+function normalizeApiBase(rawBaseUrl) {
+  const trimmedBase = String(rawBaseUrl || "").trim().replace(/\/+$/, "");
+  if (!trimmedBase) {
+    return "http://localhost:5001/api";
+  }
+  return trimmedBase.endsWith("/api") ? trimmedBase : `${trimmedBase}/api`;
+}
+
+export const API_BASE = normalizeApiBase(process.env.REACT_APP_API_BASE_URL || "http://localhost:5001");
+export const ADMIN_APP_URL = (process.env.REACT_APP_ADMIN_APP_URL || "http://localhost:5173").trim();
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
@@ -22,7 +33,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:5001/api/auth/logout", {
+      await fetch(`${API_BASE}/auth/logout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role: user?.role || "user" }),
@@ -38,7 +49,13 @@ export function AuthProvider({ children }) {
 
   const requireLogin = (route) => {
     if (user) return true;
-    setAfterLoginRoute(route);
+    if (typeof route === "string") {
+      setAfterLoginRoute({ pathname: route });
+    } else if (route && typeof route === "object" && typeof route.pathname === "string") {
+      setAfterLoginRoute(route);
+    } else {
+      setAfterLoginRoute({ pathname: "/" });
+    }
     setShowAuth(true);
     return false;
   };

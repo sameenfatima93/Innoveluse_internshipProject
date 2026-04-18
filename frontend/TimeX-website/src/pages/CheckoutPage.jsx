@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { API_BASE, useAuth } from "../context/AuthContext";
 import "../styles/global.css";
 
 function SuccessPopup({ onClose }) {
@@ -37,31 +37,35 @@ const inputStyle = {
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const { cartItems, cartTotal, clearCart } = useCart();
+  const location = useLocation();
+  const { cartItems, clearCart } = useCart();
   const { user } = useAuth();
   const [form, setForm] = useState({ name: user?.name||"", email: user?.email||"", phone:"", address:"", city:"", payment:"cod" });
   const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(null);
-  const isCartEmpty = cartItems.length === 0;
+  const buyNowItem = location.state?.buyNowItem;
+  const checkoutItems = buyNowItem ? [{ ...buyNowItem, qty: Number(buyNowItem.qty || 1) }] : cartItems;
+  const checkoutSubtotal = checkoutItems.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 1), 0);
+  const isCheckoutEmpty = checkoutItems.length === 0;
 
   const handleChange = e => setForm(p=>({...p,[e.target.name]:e.target.value}));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isCartEmpty) {
+    if (isCheckoutEmpty) {
       alert("Your cart is empty. Please add at least one product before confirming order.");
       navigate("/products");
       return;
     }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5001/api/orders", {
+      const res = await fetch(`${API_BASE}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user,
-          items: cartItems,
+          items: checkoutItems,
           amount: grandTotal,
           shippingAddress: form.address,
           city: form.city,
@@ -70,12 +74,15 @@ export default function CheckoutPage() {
         }),
       });
 
+      const payload = await res.json().catch(() => null);
       if (!res.ok) {
-        throw new Error("Failed to place order");
+        throw new Error(payload?.message || "Failed to place order");
       }
 
       setShowSuccess(true);
-      clearCart();
+      if (!buyNowItem) {
+        clearCart();
+      }
     } catch (err) {
       alert(err.message || "Order failed");
     } finally {
@@ -85,8 +92,8 @@ export default function CheckoutPage() {
 
   const handleSuccessClose = () => { setShowSuccess(false); navigate("/orders"); };
 
-  const deliveryFee = cartTotal >= 5000 ? 0 : 200;
-  const grandTotal = cartTotal + deliveryFee;
+  const deliveryFee = checkoutSubtotal >= 5000 ? 0 : 200;
+  const grandTotal = checkoutSubtotal + deliveryFee;
 
   return (
     <div style={{ minHeight:"100vh", background:"#08080f" }}>
@@ -154,8 +161,8 @@ export default function CheckoutPage() {
             </div>
 
             {/* Submit */}
-            <button type="submit" disabled={loading || isCartEmpty} style={{ background:"linear-gradient(135deg,#4f8ef7,#6366f1)", color:"#fff", border:"none", borderRadius:16, padding:"16px", fontSize:16, fontWeight:700, cursor:(loading || isCartEmpty)?"not-allowed":"pointer", opacity:(loading || isCartEmpty)?0.6:1, boxShadow:"0 8px 32px rgba(79,142,247,0.3)", transition:"opacity 0.2s" }}>
-              {loading ? "Placing Order..." : isCartEmpty ? "Add Items To Cart First" : "Confirm Order →"}
+            <button type="submit" disabled={loading || isCheckoutEmpty} style={{ background:"linear-gradient(135deg,#4f8ef7,#6366f1)", color:"#fff", border:"none", borderRadius:16, padding:"16px", fontSize:16, fontWeight:700, cursor:(loading || isCheckoutEmpty)?"not-allowed":"pointer", opacity:(loading || isCheckoutEmpty)?0.6:1, boxShadow:"0 8px 32px rgba(79,142,247,0.3)", transition:"opacity 0.2s" }}>
+              {loading ? "Placing Order..." : isCheckoutEmpty ? "Add Items To Cart First" : "Confirm Order →"}
             </button>
             <p style={{ textAlign:"center", color:"rgba(255,255,255,0.3)", fontSize:12, margin:0 }}>
               🔒 Your order will be processed securely
@@ -167,12 +174,12 @@ export default function CheckoutPage() {
             <div style={{ background:"#0d0d1e", border:"1px solid rgba(255,255,255,0.08)", borderRadius:20, padding:"1.5rem" }}>
               <h3 style={{ color:"#fff", fontSize:16, fontWeight:700, margin:"0 0 1rem" }}>🛒 Order Summary</h3>
 
-              {cartItems.length === 0 ? (
+              {checkoutItems.length === 0 ? (
                 <p style={{ color:"rgba(255,255,255,0.3)", fontSize:14, textAlign:"center", padding:"1rem" }}>No items in cart</p>
               ) : (
                 <>
                   <div style={{ display:"flex", flexDirection:"column", gap:12, marginBottom:"1.25rem" }}>
-                    {cartItems.map(item=>(
+                    {checkoutItems.map(item=>(
                       <div key={item.id} style={{ display:"flex", gap:12, alignItems:"center" }}>
                         <div style={{ width:52, height:52, borderRadius:10, background:`linear-gradient(135deg,${item.color||"#1a1a2e"},#0d0d2e)`, flexShrink:0, overflow:"hidden" }}>
                           {item.image ? <img src={item.image} alt={item.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : <span style={{ fontSize:24 }}>⌚</span>}
@@ -189,7 +196,7 @@ export default function CheckoutPage() {
                   <div style={{ borderTop:"1px solid rgba(255,255,255,0.08)", paddingTop:"1rem", display:"flex", flexDirection:"column", gap:8 }}>
                     <div style={{ display:"flex", justifyContent:"space-between" }}>
                       <span style={{ color:"rgba(255,255,255,0.5)", fontSize:14 }}>Subtotal</span>
-                      <span style={{ color:"#fff", fontSize:14 }}>Rs {cartTotal.toLocaleString()}</span>
+                      <span style={{ color:"#fff", fontSize:14 }}>Rs {checkoutSubtotal.toLocaleString()}</span>
                     </div>
                     <div style={{ display:"flex", justifyContent:"space-between" }}>
                       <span style={{ color:"rgba(255,255,255,0.5)", fontSize:14 }}>Delivery</span>

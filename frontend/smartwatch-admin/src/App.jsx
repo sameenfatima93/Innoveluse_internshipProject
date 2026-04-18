@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AdminProvider } from './context/AdminContext';
+import { API_BASE, AdminProvider } from './context/AdminContext';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Orders from './pages/Orders';
@@ -18,19 +18,32 @@ function AdminLoginGate({ children }) {
 
   useEffect(() => {
     const verify = async () => {
-      const token = localStorage.getItem('timex_admin_token');
+      const currentUrl = new URL(window.location.href);
+      const tokenFromQuery = currentUrl.searchParams.get('adminToken');
+
+      if (tokenFromQuery) {
+        localStorage.setItem('timex_admin_token', tokenFromQuery);
+        currentUrl.searchParams.delete('adminToken');
+        window.history.replaceState({}, '', `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`);
+      }
+
+      const token = tokenFromQuery || localStorage.getItem('timex_admin_token');
       if (!token) {
         setChecking(false);
         return;
       }
 
       try {
-        const res = await fetch('http://localhost:5001/api/auth/admin-verify', {
+        const res = await fetch(`${API_BASE}/auth/admin-verify`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setAuthenticated(res.ok);
+        if (!res.ok) {
+          localStorage.removeItem('timex_admin_token');
+        }
       } catch {
         setAuthenticated(false);
+        localStorage.removeItem('timex_admin_token');
       } finally {
         setChecking(false);
       }
@@ -42,7 +55,7 @@ function AdminLoginGate({ children }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5001/api/auth/admin-login', {
+      const res = await fetch(`${API_BASE}/auth/admin-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, password }),

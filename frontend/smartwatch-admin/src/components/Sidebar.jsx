@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Package, ShoppingCart, Users, Tag,
   BarChart2, Settings, ChevronLeft, ChevronRight, Watch
 } from 'lucide-react';
-import { useAdmin } from '../context/AdminContext';
+import { API_BASE, useAdmin } from '../context/AdminContext';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -21,7 +21,7 @@ export default function Sidebar() {
   const handleAdminLogout = async () => {
     const token = localStorage.getItem('timex_admin_token');
     try {
-      await fetch('http://localhost:5001/api/auth/logout', {
+      await fetch(`${API_BASE}/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

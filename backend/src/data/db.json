@@ -1,6 +1,32 @@
 {
   "users": [
     {
+      "id": "U003",
+      "name": "QA User",
+      "email": "qa_1776496824968@test.com",
+      "password": "$2b$10$k9W3iVo19effVkP0nyN1Ou0MkfGkeodxIicbPBujSyVZenhMb./ga",
+      "role": "user",
+      "status": "active",
+      "phone": "",
+      "orders": 1,
+      "totalSpent": 1200,
+      "joinDate": "2026-04-18",
+      "avatar": "QA"
+    },
+    {
+      "id": "U002",
+      "name": "QA User",
+      "email": "qa_1776496687@test.com",
+      "password": "$2b$10$QF.S/p9JbDSgiA3DOn04Wuv37vqFUuYwH.6wVatpBdfjQwAC3fHHa",
+      "role": "user",
+      "status": "active",
+      "phone": "",
+      "orders": 1,
+      "totalSpent": 1200,
+      "joinDate": "2026-04-18",
+      "avatar": "QA"
+    },
+    {
       "id": "U001",
       "name": "Affan Ahmed",
       "email": "umair123@gmail.com",
@@ -8,8 +34,8 @@
       "role": "user",
       "status": "active",
       "phone": "",
-      "orders": 1,
-      "totalSpent": 89999,
+      "orders": 3,
+      "totalSpent": 269997,
       "joinDate": "2026-04-16",
       "avatar": "AF"
     }
@@ -87,7 +113,97 @@
   ],
   "orders": [
     {
-      "id": "ORD-1001",
+      "id": "ORD-1005",
+      "customer": "Affan Ahmed",
+      "email": "umair123@gmail.com",
+      "userId": "U001",
+      "product": "Samsung Galaxy Watch 6 Classic",
+      "items": 1,
+      "amount": 89999,
+      "status": "delivered",
+      "date": "2026-04-18",
+      "avatar": "AF",
+      "shippingAddress": "karachi m hn",
+      "city": "35",
+      "phone": "54734344434353",
+      "paymentMethod": "cod",
+      "lineItems": [
+        {
+          "id": "P001",
+          "name": "Samsung Galaxy Watch 6 Classic",
+          "brand": "Samsung",
+          "category": "mens",
+          "price": 89999,
+          "oldPrice": 109999,
+          "rating": 4.8,
+          "badge": "hot",
+          "color": "#0a1628",
+          "accent": "#4f8ef7",
+          "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80",
+          "description": "Premium smartwatch with rotating bezel and health tracking.",
+          "features": [
+            "ECG",
+            "Sleep Tracking",
+            "GPS"
+          ],
+          "status": "active",
+          "stock": 84,
+          "sold": 312,
+          "isBestSeller": true,
+          "qty": 1
+        }
+      ]
+    },
+    {
+      "id": "ORD-1004",
+      "customer": "QA User",
+      "email": "qa_1776496824968@test.com",
+      "userId": "U003",
+      "product": "Test Product",
+      "items": 1,
+      "amount": 1200,
+      "status": "packed",
+      "date": "2026-04-18",
+      "avatar": "QA",
+      "shippingAddress": "Street 1",
+      "city": "Karachi",
+      "phone": "03000000000",
+      "paymentMethod": "cod",
+      "lineItems": [
+        {
+          "id": "P001",
+          "name": "Test Product",
+          "qty": 1,
+          "price": 1000
+        }
+      ]
+    },
+    {
+      "id": "ORD-1003",
+      "customer": "QA User",
+      "email": "qa_1776496687@test.com",
+      "userId": "U002",
+      "product": "Test Product",
+      "items": 1,
+      "amount": 1200,
+      "status": "packed",
+      "date": "2026-04-18",
+      "avatar": "QA",
+      "shippingAddress": "Street 1",
+      "city": "Karachi",
+      "phone": "03000000000",
+      "paymentMethod": "cod",
+      "lineItems": [
+        {
+          "price": 1000,
+          "name": "Test Product",
+          "id": "P001",
+          "qty": 1
+        }
+      ]
+    },
+    {
+      "id": "ORD-1002",
       "customer": "Affan Ahmed",
       "email": "umair123@gmail.com",
       "userId": "U001",
@@ -95,6 +211,48 @@
       "items": 1,
       "amount": 89999,
       "status": "pending",
+      "date": "2026-04-18",
+      "avatar": "AF",
+      "shippingAddress": "sadffh",
+      "city": "3fcvxz",
+      "phone": "23567",
+      "paymentMethod": "easypaisa",
+      "lineItems": [
+        {
+          "id": "P001",
+          "name": "Samsung Galaxy Watch 6 Classic",
+          "brand": "Samsung",
+          "category": "mens",
+          "price": 89999,
+          "oldPrice": 109999,
+          "rating": 4.8,
+          "badge": "hot",
+          "color": "#0a1628",
+          "accent": "#4f8ef7",
+          "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80",
+          "description": "Premium smartwatch with rotating bezel and health tracking.",
+          "features": [
+            "ECG",
+            "Sleep Tracking",
+            "GPS"
+          ],
+          "status": "active",
+          "stock": 84,
+          "sold": 312,
+          "isBestSeller": true,
+          "qty": 1
+        }
+      ]
+    },
+    {
+      "id": "ORD-1001",
+      "customer": "Affan Ahmed",
+      "email": "umair123@gmail.com",
+      "userId": "U001",
+      "product": "Samsung Galaxy Watch 6 Classic",
+      "items": 1,
+      "amount": 89999,
+      "status": "delivered",
       "date": "2026-04-16",
       "avatar": "AF",
       "shippingAddress": "jnsiu",
@@ -143,6 +301,48 @@
     }
   ],
   "notifications": [
+    {
+      "id": 1776520216273,
+      "type": "order",
+      "message": "New order ORD-1005 received",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496825258,
+      "type": "order",
+      "message": "New order ORD-1004 received",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496825161,
+      "type": "user",
+      "message": "New user registered: QA User",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496689064,
+      "type": "order",
+      "message": "New order ORD-1003 received",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496687809,
+      "type": "user",
+      "message": "New user registered: QA User",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776494519124,
+      "type": "order",
+      "message": "New order ORD-1002 received",
+      "time": "just now",
+      "read": false
+    },
     {
       "id": 1776323961232,
       "type": "order",

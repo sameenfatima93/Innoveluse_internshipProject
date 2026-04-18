@@ -1,7 +1,16 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 const AdminContext = createContext();
-const API_BASE = 'http://localhost:5001/api';
+
+function normalizeApiBase(rawBaseUrl) {
+  const trimmedBase = String(rawBaseUrl || '').trim().replace(/\/+$/, '');
+  if (!trimmedBase) {
+    return 'http://localhost:5001/api';
+  }
+  return trimmedBase.endsWith('/api') ? trimmedBase : `${trimmedBase}/api`;
+}
+
+export const API_BASE = normalizeApiBase(import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001');
 
 export function AdminProvider({ children }) {
   const [products, setProducts] = useState([]);

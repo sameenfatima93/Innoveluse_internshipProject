@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const API_BASE = "http://localhost:5001/api";
+import { API_BASE } from "../context/AuthContext";
 
 export function useProducts() {
   const [products, setProducts] = useState([]);
