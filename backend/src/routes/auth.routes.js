@@ -90,7 +90,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    const db = readDb();
+    const db = await readDb();
     const exists = db.users.some((u) => u.email.toLowerCase() === email.toLowerCase());
     if (exists) {
       return res.status(400).json({ success: false, message: "Email already exists" });
@@ -99,7 +99,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     let createdUser = null;
-    updateDb((state) => {
+    await updateDb((state) => {
       const newUser = {
         id: `U${String(state.users.length + 1).padStart(3, "0")}`,
         name,
@@ -155,7 +155,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ success: false, message: "Email and password required" });
     }
 
-    const db = readDb();
+    const db = await readDb();
     const user = db.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
 
     if (!user) {

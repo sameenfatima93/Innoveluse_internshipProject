@@ -3,8 +3,8 @@ const { readDb, updateDb } = require("../utils/store");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  const db = readDb();
+router.get("/", async (req, res) => {
+  const db = await readDb();
   const users = db.users.map((u) => ({
     id: u.id,
     name: u.name,
@@ -21,7 +21,7 @@ router.get("/", (req, res) => {
   res.json({ success: true, data: users });
 });
 
-router.patch("/:id/status", (req, res) => {
+router.patch("/:id/status", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
@@ -31,7 +31,7 @@ router.patch("/:id/status", (req, res) => {
   }
 
   let updated = null;
-  updateDb((db) => {
+  await updateDb((db) => {
     db.users = db.users.map((u) => {
       if (u.id === id) {
         updated = { ...u, status };

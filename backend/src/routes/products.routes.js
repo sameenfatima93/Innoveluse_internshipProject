@@ -3,18 +3,18 @@ const { readDb, updateDb } = require("../utils/store");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  const db = readDb();
+router.get("/", async (req, res) => {
+  const db = await readDb();
   res.json({ success: true, data: db.products });
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const payload = req.body;
   if (!payload?.name) {
     return res.status(400).json({ success: false, message: "Name is required" });
   }
 
-  const db = updateDb((state) => {
+  const db = await updateDb((state) => {
     const id = `P${String(state.products.length + 1).padStart(3, "0")}`;
     const newProduct = {
       id,
@@ -42,12 +42,12 @@ router.post("/", (req, res) => {
   return res.status(201).json({ success: true, data: db.products[0] });
 });
 
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res) => {
   const { id } = req.params;
   const payload = req.body || {};
   let updated = null;
 
-  updateDb((db) => {
+  await updateDb((db) => {
     db.products = db.products.map((p) => {
       if (p.id !== id) return p;
 
@@ -74,11 +74,11 @@ router.patch("/:id", (req, res) => {
   return res.json({ success: true, data: updated });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   let deleted = false;
 
-  updateDb((db) => {
+  await updateDb((db) => {
     const before = db.products.length;
     db.products = db.products.filter((p) => p.id !== id);
     deleted = db.products.length < before;
