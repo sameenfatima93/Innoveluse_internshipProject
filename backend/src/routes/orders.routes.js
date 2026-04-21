@@ -12,8 +12,8 @@ function generateOrderId(existingOrders) {
   return `ORD-${String(1000 + last + 1)}`;
 }
 
-router.get("/", (req, res) => {
-  const db = readDb();
+router.get("/", async (req, res) => {
+  const db = await readDb();
   const { userEmail, userId } = req.query;
 
   let orders = db.orders;
@@ -27,14 +27,14 @@ router.get("/", (req, res) => {
   res.json({ success: true, data: orders });
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { user, items, amount, shippingAddress, city, phone, paymentMethod } = req.body;
 
   if (!user?.email || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ success: false, message: "Invalid order payload" });
   }
 
-  const db = updateDb((state) => {
+  const db = await updateDb((state) => {
     const order = {
       id: generateOrderId(state.orders),
       customer: user.name,
@@ -81,7 +81,7 @@ router.post("/", (req, res) => {
   return res.status(201).json({ success: true, data: created });
 });
 
-router.patch("/:id/status", (req, res) => {
+router.patch("/:id/status", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   const allowed = ["pending", "packed", "out_for_delivery", "delivered", "cancelled"];
@@ -91,7 +91,7 @@ router.patch("/:id/status", (req, res) => {
   }
 
   let updated = null;
-  updateDb((db) => {
+  await updateDb((db) => {
     db.orders = db.orders.map((o) => {
       if (o.id === id) {
         updated = { ...o, status };

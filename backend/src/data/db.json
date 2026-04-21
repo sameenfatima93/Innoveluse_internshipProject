@@ -1,6 +1,49 @@
 {
   "users": [
     {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+      "id": "U003",
+      "name": "QA User",
+      "email": "qa_1776496824968@test.com",
+      "password": "$2b$10$k9W3iVo19effVkP0nyN1Ou0MkfGkeodxIicbPBujSyVZenhMb./ga",
+      "role": "user",
+      "status": "active",
+      "phone": "",
+      "orders": 1,
+      "totalSpent": 1200,
+      "joinDate": "2026-04-18",
+      "avatar": "QA"
+    },
+    {
+      "id": "U002",
+      "name": "QA User",
+      "email": "qa_1776496687@test.com",
+      "password": "$2b$10$QF.S/p9JbDSgiA3DOn04Wuv37vqFUuYwH.6wVatpBdfjQwAC3fHHa",
+      "role": "user",
+      "status": "active",
+      "phone": "",
+      "orders": 1,
+      "totalSpent": 1200,
+      "joinDate": "2026-04-18",
+      "avatar": "QA"
+=======
+      "id": "U002",
+      "name": "Ali",
+      "email": "ali@test.com",
+      "password": "$2b$10$G/cdiKkLKAu8hkKTPF2mrOlZ6yc4arUSBy6QN3Wad6limTwWwxeeW",
+      "role": "user",
+      "status": "active",
+      "phone": "",
+      "orders": 0,
+      "totalSpent": 0,
+      "joinDate": "2026-04-16",
+      "avatar": "AL"
+>>>>>>> ab2cc49 (update backend and DB config)
+    },
+    {
+>>>>>>> de7d0506fb0fc6b1aef57547c655875e45ba226f
       "id": "U001",
       "name": "Sameen Fatima",
       "email": "sameen.fatima993@gmail.com",
@@ -16,8 +59,70 @@
   ],
   "products": [
     {
+<<<<<<< HEAD
       "id": "16",
       "name": "Samsung Galaxy Watch Ultra",
+=======
+      "id": "P006",
+      "name": "Smart Watch",
+      "category": "mens",
+      "brand": "Apple",
+      "price": 5000,
+      "oldPrice": 5000,
+      "stock": 0,
+      "sold": 0,
+      "rating": 0,
+      "status": "active",
+      "image": "",
+      "description": "Latest smartwatch",
+      "features": [],
+      "color": "#1a1a2e",
+      "accent": "#4f8ef7",
+      "badge": "",
+      "isBestSeller": false
+    },
+    {
+      "id": "P005",
+      "name": "Smart Watch",
+      "category": "mens",
+      "brand": "Apple",
+      "price": 5000,
+      "oldPrice": 5000,
+      "stock": 0,
+      "sold": 0,
+      "rating": 0,
+      "status": "active",
+      "image": "",
+      "description": "Latest smartwatch",
+      "features": [],
+      "color": "#1a1a2e",
+      "accent": "#4f8ef7",
+      "badge": "",
+      "isBestSeller": false
+    },
+    {
+      "id": "P004",
+      "name": "Smart Watch",
+      "category": "mens",
+      "brand": "Apple",
+      "price": 5000,
+      "oldPrice": 5000,
+      "stock": 0,
+      "sold": 0,
+      "rating": 0,
+      "status": "active",
+      "image": "",
+      "description": "Latest smartwatch with health tracking",
+      "features": [],
+      "color": "#1a1a2e",
+      "accent": "#4f8ef7",
+      "badge": "",
+      "isBestSeller": false
+    },
+    {
+      "id": "P001",
+      "name": "Samsung Galaxy Watch 6 Classic",
+>>>>>>> de7d0506fb0fc6b1aef57547c655875e45ba226f
       "brand": "Samsung",
       "category": "Man",
       "price": 174999,
@@ -671,9 +776,54 @@
   ],
   "notifications": [
     {
+<<<<<<< HEAD
       "id": 1776773528195,
+=======
+<<<<<<< HEAD
+      "id": 1776520216273,
+      "type": "order",
+      "message": "New order ORD-1005 received",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496825258,
+      "type": "order",
+      "message": "New order ORD-1004 received",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496825161,
+      "type": "user",
+      "message": "New user registered: QA User",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496689064,
+      "type": "order",
+      "message": "New order ORD-1003 received",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776496687809,
+      "type": "user",
+      "message": "New user registered: QA User",
+      "time": "just now",
+      "read": false
+    },
+    {
+      "id": 1776494519124,
+>>>>>>> de7d0506fb0fc6b1aef57547c655875e45ba226f
       "type": "order",
       "message": "New order ORD-1002 received",
+=======
+      "id": 1776349249841,
+      "type": "user",
+      "message": "New user registered: Ali",
+>>>>>>> ab2cc49 (update backend and DB config)
       "time": "just now",
       "read": false
     },
