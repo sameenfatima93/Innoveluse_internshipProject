@@ -12,7 +12,7 @@ import "../styles/About.css";
 const TEAM = [
   { name:"Maham Tahir",     role:"Project Lead",         initials:"MT", color:"#4f8ef7", bio:"Leads the overall project vision and ensures seamless coordination between all team members." },
   { name:"Sameen Fatima",      role:"Frontend Developer",   initials:"SF", color:"#10b981", bio:"Responsible for building the UI components and ensuring a premium user experience across all pages." },
-  { name:"Umaima Gull",    role:"Database & Integration",       initials:"UG", color:"#f59e0b", bio:"Crafts the visual design language and user flows that make TimeX intuitive and beautiful." },
+  { name:"Umaima Gull",    role:"Database & Integration",       initials:"UG", color:"#f59e0b", bio:"Crafts the visual design language and user flows that make Chrono Store intuitive and beautiful." },
   { name:"Affan Ahmed",  role:"Backend Developer",    initials:"AA", color:"#ec4899", bio:"Handles data management, API integration, and ensures smooth performance of the platform." },
   { name:"Anchal Kumari",    role:"QA & Testing",         initials:"AK", color:"#8b5cf6", bio:"Ensures every feature works flawlessly by rigorously testing all aspects of the application." },
 ];
@@ -41,7 +41,7 @@ export default function AboutPage() {
         <div className="about-hero__content">
           <p className="about-hero__eyebrow">Our Story</p>
           <h1 className="about-hero__title">Pakistan's Most Trusted<br /><span style={{ color:"#4f8ef7" }}>Smart Watch Store</span></h1>
-          <p className="about-hero__sub">Founded in 2021 in Karachi, TimeX was built on one simple belief — every Pakistani deserves access to premium smart watches at fair prices.</p>
+          <p className="about-hero__sub">Founded in 2021 in Karachi, Chrono Store was built on one simple belief — every Pakistani deserves access to premium smart watches at fair prices.</p>
         </div>
       </section>
 
@@ -74,8 +74,8 @@ export default function AboutPage() {
         <div className="about-story__text">
           <p className="about-story__label">Who We Are</p>
           <h2 className="about-story__title">Built With Passion,<br />Driven by Quality</h2>
-          <p className="about-story__body">TimeX started as an internship project by a passionate team of 5 students who wanted to build something real — a premium e-commerce platform for smart watches in Pakistan. What began as a college project grew into a fully functional digital store.</p>
-          <p className="about-story__body" style={{ marginTop:"1rem" }}>Today, TimeX showcases products from top brands like Samsung, Apple, Garmin, Fitbit, and more — delivering a world-class shopping experience built entirely by our team.</p>
+          <p className="about-story__body">Chrono Store started as an internship project by a passionate team of 5 students who wanted to build something real — a premium e-commerce platform for smart watches in Pakistan. What began as a college project grew into a fully functional digital store.</p>
+          <p className="about-story__body" style={{ marginTop:"1rem" }}>Today, Chrono Store showcases products from top brands like Samsung, Apple, Garmin, Fitbit, and more — delivering a world-class shopping experience built entirely by our team.</p>
           <Link to="/products" className="about-story__btn">Explore Our Products →</Link>
         </div>
       </section>
@@ -84,7 +84,7 @@ export default function AboutPage() {
       <section className="about-team">
         <div className="about-team__header">
           <h2 className="about-team__title">Meet The Team</h2>
-          <p className="about-team__sub">The 5 people who built TimeX from scratch</p>
+          <p className="about-team__sub">The 5 people who built Chrono Store from scratch</p>
         </div>
         <div className="about-team__grid">
           {TEAM.map(m=>(
@@ -123,7 +123,7 @@ export default function AboutPage() {
       <section className="about-faq">
         <div className="about-faq__inner">
           <h2 className="about-faq__title">Frequently Asked Questions</h2>
-          <p className="about-faq__sub">Everything you need to know about TimeX</p>
+          <p className="about-faq__sub">Everything you need to know about Chrono Store</p>
           <div className="faq-list">
             {FAQS.map((faq,i)=>(
               <div key={i} className={`faq-item ${openFaq===i?"faq-item--open":""}`}>

@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const { readDb, updateDb } = require("../utils/store");
 
 const ADMIN_TOKEN_TTL_SECONDS = Number(process.env.ADMIN_TOKEN_TTL_SECONDS || 60 * 60 * 24);
-const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || "timex-admin-secret-change-me";
+const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || "chronostore-admin-secret-change-me";
 
 function toBase64Url(input) {
   return Buffer.from(input)

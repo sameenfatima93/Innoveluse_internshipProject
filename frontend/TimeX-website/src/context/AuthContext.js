@@ -16,7 +16,7 @@ export const ADMIN_APP_URL = (process.env.REACT_APP_ADMIN_APP_URL || "http://loc
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = localStorage.getItem("timex_user");
+      const savedUser = localStorage.getItem("chronostore_user");
       return savedUser ? JSON.parse(savedUser) : null;
     } catch {
       return null;
@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("timex_user", JSON.stringify(userData));
+    localStorage.setItem("chronostore_user", JSON.stringify(userData));
     setShowAuth(false);
   };
 
@@ -42,8 +42,8 @@ export function AuthProvider({ children }) {
       // Local logout should still complete even if backend is unavailable.
     } finally {
       setUser(null);
-      localStorage.removeItem("timex_user");
-      localStorage.removeItem("timex_admin_token");
+      localStorage.removeItem("chronostore_user");
+      localStorage.removeItem("chronostore_admin_token");
     }
   };
 

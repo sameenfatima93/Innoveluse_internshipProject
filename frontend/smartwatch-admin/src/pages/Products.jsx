@@ -6,18 +6,16 @@ import { Plus, Search, Edit2, Trash2, X, Star } from 'lucide-react';
 const statusColor = {
   active: 'bg-emerald-600/20 text-emerald-400',
   out_of_stock: 'bg-red-600/20 text-red-400',
-  low_stock: 'bg-amber-600/20 text-amber-400',
 };
 
 const statusLabel = {
   active: 'Active',
   out_of_stock: 'Out of Stock',
-  low_stock: 'Low Stock',
 };
 
 function ProductModal({ product, onClose, onSave }) {
   const [form, setForm] = useState(product || {
-    name: '', category: 'Smartwatch', brand: '', price: '', stock: '', status: 'active', description: '', tags: []
+    name: '', category: 'Smartwatch', brand: '', price: '', stock: '', status: 'active', description: '', image: '', tags: []
   });
 
   const handleSubmit = (e) => {
@@ -53,20 +51,18 @@ function ProductModal({ product, onClose, onSave }) {
             <div>
               <label className="text-xs text-slate-500 mb-1 block">Category</label>
               <select value={form.category} onChange={e => setForm({...form, category: e.target.value})}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-600/50">
-                <option value="Smartwatch">Smartwatch</option>
-                <option value="Strap">Strap</option>
-                <option value="Charger">Charger</option>
-                <option value="Accessory">Accessory</option>
+                className="w-full bg-slate-700/60 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-600/50">
+                <option value="Man">Man</option>
+                <option value="Woman">Woman</option>
+                <option value="Wrist">Wrist</option>
               </select>
             </div>
             <div>
               <label className="text-xs text-slate-500 mb-1 block">Status</label>
               <select value={form.status} onChange={e => setForm({...form, status: e.target.value})}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-600/50">
+                className="w-full bg-slate-700/60 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-600/50">
                 <option value="active">Active</option>
                 <option value="out_of_stock">Out of Stock</option>
-                <option value="low_stock">Low Stock</option>
               </select>
             </div>
           </div>
@@ -83,6 +79,15 @@ function ProductModal({ product, onClose, onSave }) {
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-600/50"
                 placeholder="100" />
             </div>
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 mb-1 block">Image URL</label>
+            <input value={form.image} onChange={e => setForm({...form, image: e.target.value})}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-600/50"
+              placeholder="https://example.com/product-image.jpg" />
+            {form.image && (
+              <img src={form.image} alt="Preview" className="mt-2 w-full h-32 object-cover rounded-lg" onError={e => e.target.style.display='none'} />
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 mb-1 block">Description</label>
@@ -133,14 +138,12 @@ export default function Products() {
               className="bg-white/5 border border-white/10 rounded-xl pl-8 pr-4 py-2 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-brand-600/50 w-56" />
           </div>
           <select value={filter} onChange={e => setFilter(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-brand-600/50">
+            className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-slate-400 focus:outline-none focus:border-brand-600/50">
             <option value="all">All Categories</option>
-            <option value="smartwatch">Smartwatch</option>
-            <option value="strap">Strap</option>
-            <option value="charger">Charger</option>
-            <option value="active">Active</option>
-            <option value="out_of_stock">Out of Stock</option>
-            <option value="low_stock">Low Stock</option>
+            <option value="man">Man</option>
+            <option value="woman">Woman</option>
+            <option value="wrist">Wrist</option>
+            
           </select>
         </div>
         <button onClick={() => setModal('add')}
@@ -153,7 +156,6 @@ export default function Products() {
       <div className="flex gap-3 mb-5 flex-wrap text-sm">
         <span className="text-slate-500">Total: <span className="text-white font-medium">{products.length}</span></span>
         <span className="text-slate-500">Active: <span className="text-emerald-400 font-medium">{products.filter(p=>p.status==='active').length}</span></span>
-        <span className="text-slate-500">Low Stock: <span className="text-amber-400 font-medium">{products.filter(p=>p.status==='low_stock').length}</span></span>
         <span className="text-slate-500">Out of Stock: <span className="text-red-400 font-medium">{products.filter(p=>p.status==='out_of_stock').length}</span></span>
       </div>
 

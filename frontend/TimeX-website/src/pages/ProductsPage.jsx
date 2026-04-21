@@ -12,9 +12,9 @@ import "../styles/ProductsPage.css";
 
 const CATEGORIES = [
   { id:"all",    label:"All" },
-  { id:"mens",   label:"Men's" },
-  { id:"womens", label:"Women's" },
-  { id:"wrist",  label:"Wrist" },
+  { id:"Man",    label:"Men's" },
+  { id:"Woman",  label:"Women's" },
+  { id:"Wrist",  label:"Wrist" },
 ];
 
 function ProductCard({ product }) {

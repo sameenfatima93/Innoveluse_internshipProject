@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer__top">
         <div style={{ maxWidth: 260 }}>
-          <img src={logo} alt="TimeX" style={{ height: 120, width: "auto", objectFit: "contain", mixBlendMode: "lighten", filter: "brightness(1.1)", marginBottom: 12 }} />
+          <img src={logo} alt="Chrono Store" style={{ height: 120, width: "auto", objectFit: "contain", mixBlendMode: "lighten", filter: "brightness(1.1)", marginBottom: 12 }} />
           <p className="footer__desc">Pakistan's #1 trusted smart watch store. 100% original products, fast delivery across Pakistan.</p>
         </div>
         <div className="footer__links">
@@ -33,7 +33,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer__bottom">
-        <p>© 2025 TimeX. All rights reserved. | Made with ❤️ in Pakistan</p>
+        <p>© 2025 Chrono Store. All rights reserved. | Made with ❤️ in Pakistan</p>
       </div>
     </footer>
   );

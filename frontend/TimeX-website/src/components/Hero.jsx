@@ -76,7 +76,7 @@ export default function Hero({ onShopNow }) {
       {/* Content */}
       <div className={`hero__content ${animating ? "hero__content--exit" : "hero__content--enter"}`}>
         <div style={{ marginBottom:"1rem" }}>
-          <img src={logo} alt="TimeX" style={{ height:36, width:"auto", objectFit:"contain", mixBlendMode:"lighten", filter:"brightness(1.15)", opacity:0.9 }} />
+          <img src={logo} alt="Chrono Store" style={{ height:36, width:"auto", objectFit:"contain", mixBlendMode:"lighten", filter:"brightness(1.15)", opacity:0.9 }} />
         </div>
         <div className="hero__eyebrow" style={{ color: slide.accentColor, background: `${slide.accentColor}18`, borderColor: `${slide.accentColor}30` }}>
           {slide.tag}

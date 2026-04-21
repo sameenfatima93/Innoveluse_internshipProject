@@ -14,7 +14,7 @@ function SuccessPopup({ onClose }) {
         <div style={{ width:72, height:72, borderRadius:"50%", background:"rgba(16,185,129,0.15)", border:"2px solid #10b981", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 1.5rem", fontSize:32 }}>✅</div>
         <h2 style={{ color:"#fff", fontSize:24, fontWeight:800, margin:"0 0 8px", fontFamily:"Georgia,serif" }}>Order Placed!</h2>
         <p style={{ color:"rgba(255,255,255,0.6)", fontSize:15, margin:"0 0 1.5rem", lineHeight:1.6 }}>
-          Your order has been placed successfully!<br />Thank you for shopping with <span style={{ color:"#4f8ef7", fontWeight:700 }}>TimeX</span> 🎁
+          Your order has been placed successfully!<br />Thank you for shopping with <span style={{ color:"#4f8ef7", fontWeight:700 }}>Chrono Store</span> 🎁
         </p>
         <div style={{ background:"rgba(16,185,129,0.08)", border:"1px solid rgba(16,185,129,0.2)", borderRadius:12, padding:"12px 16px", marginBottom:"1.5rem" }}>
           <p style={{ color:"#10b981", fontSize:13, fontWeight:600, margin:0 }}>📦 Your order will be delivered in 2–5 business days</p>

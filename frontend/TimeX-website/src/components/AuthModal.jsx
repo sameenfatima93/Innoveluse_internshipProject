@@ -42,7 +42,7 @@ export default function AuthModal() {
           return;
         }
 
-        localStorage.removeItem("timex_user");
+        localStorage.removeItem("chronostore_user");
         setShowAuth(false);
 
         const redirectUrl = new URL(ADMIN_APP_URL);
@@ -112,7 +112,7 @@ export default function AuthModal() {
 
         {/* Logo */}
         <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-          <img src={logo} alt="TimeX" style={{ height:52, width:"auto", objectFit:"contain", mixBlendMode:"lighten", filter:"brightness(1.1)" }} />
+          <img src={logo} alt="Chrono Store" style={{ height:52, width:"auto", objectFit:"contain", mixBlendMode:"lighten", filter:"brightness(1.1)" }} />
           <p style={{ color:"rgba(255,255,255,0.4)", fontSize:13, marginTop:8 }}>
             {tab === "signup" ? "Create your account" : "Welcome back"}
           </p>
