@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Cart from "../components/Cart";
 import AuthModal from "../components/AuthModal";
-import { useAuth } from "../context/AuthContext";
+import { API_BASE, useAuth } from "../context/AuthContext";
 import "../styles/global.css";
 import "../styles/Contact.css";
 
@@ -17,12 +17,40 @@ const CONTACT_INFO = [
 export default function ContactPage() {
   const { showAuth } = useAuth();
   const [form, setForm]       = useState({ name:"", email:"", phone:"", subject:"", message:"" });
-  const [sent, setSent]       = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitError, setSubmitError] = useState(false);
   const [focused, setFocused] = useState(null);
 
   const handleChange = e => setForm(p=>({...p,[e.target.name]:e.target.value}));
-  const handleSubmit = e => { e.preventDefault(); setLoading(true); setTimeout(()=>{ setLoading(false); setSent(true); },1500); };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      setSubmitMessage("");
+      setSubmitError(false);
+
+      const response = await fetch(`${API_BASE}/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.message || "Failed to send message");
+      }
+
+      setSubmitMessage("Message sent successfully.");
+      setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch (error) {
+      setSubmitError(true);
+      setSubmitMessage(error.message || "Could not send message.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const inputStyle = (name) => ({
     width:"100%", boxSizing:"border-box",
@@ -108,17 +136,18 @@ export default function ContactPage() {
             <h2 className="contact-section-title">Send Us a Message</h2>
             <p style={{ color:"rgba(255,255,255,0.4)", fontSize:14, marginBottom:"1.5rem" }}>We'll reply within 24 hours.</p>
 
-            {sent ? (
-              <div className="contact-success">
-                <div className="contact-success__icon">✅</div>
-                <h3 className="contact-success__title">Message Sent!</h3>
-                <p className="contact-success__text">Thank you for reaching out. We'll get back to you within 24 hours.</p>
-                <button className="contact-success__btn" onClick={()=>{ setSent(false); setForm({name:"",email:"",phone:"",subject:"",message:""}); }}>
-                  Send Another Message
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display:"flex", flexDirection:"column", gap:14 }}>
+            {submitMessage ? (
+              <p style={{
+                marginBottom:"1rem",
+                color: submitError ? "#ff8e8e" : "#92f2b6",
+                fontSize:13,
+                fontWeight:600,
+              }}>
+                {submitMessage}
+              </p>
+            ) : null}
+
+            <form onSubmit={handleSubmit} style={{ display:"flex", flexDirection:"column", gap:14 }}>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
                   <div>
                     <label style={{ color:"rgba(255,255,255,0.5)", fontSize:12, fontWeight:600, display:"block", marginBottom:6 }}>Full Name *</label>
@@ -152,10 +181,9 @@ export default function ContactPage() {
                   <textarea name="message" placeholder="Write your message here..." value={form.message} onChange={handleChange} required rows={5} onFocus={()=>setFocused("message")} onBlur={()=>setFocused(null)} style={{ ...inputStyle("message"), resize:"vertical" }} />
                 </div>
                 <button type="submit" disabled={loading} style={{ background:"linear-gradient(135deg,#4f8ef7,#6366f1)", color:"#fff", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:700, cursor:loading?"not-allowed":"pointer", opacity:loading?0.8:1, transition:"opacity 0.2s" }}>
-                  {loading ? "Sending..." : "Send Message →"}
+                  {loading ? "Sending..." : "Send Message"}
                 </button>
-              </form>
-            )}
+            </form>
           </div>
         </div>
       </div>
