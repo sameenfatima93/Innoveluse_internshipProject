@@ -1,82 +1,51 @@
+const fs = require("fs");
+const path = require("path");
 const seedData = require("../data/seed");
-const User = require("../models/User");
-const Product = require("../models/Product");
-const Order = require("../models/Order");
-const Coupon = require("../models/Coupon");
-const Notification = require("../models/Notification");
 
-let seedPromise = null;
+const DB_FILE = path.join(__dirname, "..", "data", "db.json");
+let dbCache = null;
+let warnedWriteFailure = false;
 
-function clone(value) {
-  return JSON.parse(JSON.stringify(value));
+function ensureDbFile() {
+  if (!fs.existsSync(DB_FILE)) {
+    fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
+    fs.writeFileSync(DB_FILE, JSON.stringify(seedData, null, 2), "utf-8");
+  }
 }
 
-function getCollections() {
-  return {
-    users: User,
-    products: Product,
-    orders: Order,
-    coupons: Coupon,
-    notifications: Notification,
-  };
-}
-
-async function ensureSeeded() {
-  if (!seedPromise) {
-    seedPromise = (async () => {
-      const collections = getCollections();
-      const keys = Object.keys(collections);
-
-      await Promise.all(
-        keys.map(async (key) => {
-          const Model = collections[key];
-          const count = await Model.countDocuments();
-          if (count === 0 && Array.isArray(seedData[key]) && seedData[key].length > 0) {
-            await Model.insertMany(seedData[key]);
-          }
-        })
-      );
-    })();
+function readDb() {
+  if (dbCache) {
+    return dbCache;
   }
 
-  return seedPromise;
+  ensureDbFile();
+  const raw = fs.readFileSync(DB_FILE, "utf-8");
+  dbCache = JSON.parse(raw);
+  return dbCache;
 }
 
-async function readDb() {
-  await ensureSeeded();
-  const collections = getCollections();
-  const entries = await Promise.all(
-    Object.entries(collections).map(async ([key, Model]) => {
-      const docs = await Model.find({}, { _id: 0, __v: 0 }).sort({ createdAt: -1, id: -1 }).lean();
-      return [key, docs];
-    })
-  );
+function writeDb(data) {
+  dbCache = data;
 
-  return Object.fromEntries(entries);
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch (error) {
+    // Keep runtime data available even when filesystem write is blocked.
+    if (!warnedWriteFailure) {
+      warnedWriteFailure = true;
+      console.warn(
+        `[store] Could not write ${DB_FILE}. Using in-memory fallback for this run.`,
+        error.message
+      );
+    }
+  }
 }
 
-async function writeDb(data) {
-  await ensureSeeded();
-  const collections = getCollections();
-
-  await Promise.all(
-    Object.entries(collections).map(async ([key, Model]) => {
-      await Model.deleteMany({});
-
-      if (Array.isArray(data[key]) && data[key].length > 0) {
-        await Model.insertMany(data[key]);
-      }
-    })
-  );
-
-  return readDb();
-}
-
-async function updateDb(mutator) {
-  const db = await readDb();
-  const draft = clone(db);
-  const nextDb = (await mutator(draft)) || draft;
-  return writeDb(nextDb);
+function updateDb(mutator) {
+  const db = readDb();
+  const nextDb = mutator(db) || db;
+  writeDb(nextDb);
+  return nextDb;
 }
 
 module.exports = {
