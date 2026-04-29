@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Package, ShoppingCart, Users, Tag,
-  BarChart2, Settings, ChevronLeft, ChevronRight, Watch
+  BarChart2, Settings, ChevronLeft, ChevronRight, Watch, Mail
 } from 'lucide-react';
 import { API_BASE, useAdmin } from '../context/AdminContext';
 
@@ -10,6 +10,7 @@ const navItems = [
   { icon: Package, label: 'Products', path: '/products' },
   { icon: ShoppingCart, label: 'Orders', path: '/orders' },
   { icon: Users, label: 'Users', path: '/users' },
+  { icon: Mail, label: 'Messages', path: '/messages' },
   { icon: Tag, label: 'Coupons', path: '/coupons' },
   { icon: BarChart2, label: 'Analytics', path: '/analytics' },
   { icon: Settings, label: 'Settings', path: '/settings' },

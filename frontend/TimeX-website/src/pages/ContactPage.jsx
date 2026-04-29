@@ -165,14 +165,14 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label style={{ color:"rgba(255,255,255,0.5)", fontSize:12, fontWeight:600, display:"block", marginBottom:6 }}>Subject *</label>
-                    <select name="subject" value={form.subject} onChange={handleChange} required onFocus={()=>setFocused("subject")} onBlur={()=>setFocused(null)} style={{ ...inputStyle("subject"), cursor:"pointer" }}>
-                      <option value="">Select a topic</option>
-                      <option>Product Inquiry</option>
-                      <option>Order Status</option>
-                      <option>Return / Exchange</option>
-                      <option>Warranty Claim</option>
-                      <option>Suggestion</option>
-                      <option>Other</option>
+                    <select name="subject" value={form.subject} onChange={handleChange} required onFocus={()=>setFocused("subject")} onBlur={()=>setFocused(null)} style={{ ...inputStyle("subject"), cursor:"pointer", colorScheme: "dark" }}>
+                      <option value="" style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Select a topic</option>
+                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Product Inquiry</option>
+                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Order Status</option>
+                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Return / Exchange</option>
+                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Warranty Claim</option>
+                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Suggestion</option>
+                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Other</option>
                     </select>
                   </div>
                 </div>

@@ -1,6 +1,19 @@
 {
   "users": [
     {
+      "id": "U002",
+      "name": "affan",
+      "email": "affan@gmail.com",
+      "password": "$2b$10$AA.yJ/bQ4TiEdgO/UPmezOfcsAcudYkUAfh7lieRnMWvl7sGU9lxK",
+      "role": "user",
+      "status": "active",
+      "phone": "",
+      "orders": 0,
+      "totalSpent": 0,
+      "joinDate": "2026-04-29",
+      "avatar": "AF"
+    },
+    {
       "id": "U001",
       "name": "Sameen Fatima",
       "email": "sameen.fatima993@gmail.com",
@@ -670,6 +683,13 @@
     }
   ],
   "notifications": [
+    {
+      "id": 1777485544743,
+      "type": "user",
+      "message": "New user registered: affan",
+      "time": "just now",
+      "read": false
+    },
     {
       "id": 1776773528195,
       "type": "order",
