@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { API_BASE } from '../context/AdminContext';
-import { Search, Filter, Eye, X, Trash2, Mail } from 'lucide-react';
+import { Search, Filter, Eye, X, Trash2, Mail, RefreshCw } from 'lucide-react';
 
 const statusColor = {
   unread: 'bg-brand-600/20 text-brand-400',
@@ -109,32 +109,32 @@ export default function Messages() {
 
   useEffect(() => {
     fetchMessages();
-    
-    // Auto-refresh messages every 3 seconds
+
+    // Poll every 2 seconds without toggling loading UI
     const interval = setInterval(() => {
-      fetchMessages();
-    }, 3000);
+      fetchMessages({ silent: true });
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (options = {}) => {
+    const { silent = false } = options;
     try {
-      setLoading(true);
-      console.log("📡 Fetching messages from:", `${API_BASE}/contact`);
+      if (!silent) {
+        setLoading(true);
+      }
       const response = await fetch(`${API_BASE}/contact`);
       const data = await response.json();
-      console.log("📨 Response:", data);
       if (data.success) {
-        console.log(`✅ Loaded ${data.data.length} message(s)`);
         setMessages(data.data);
-      } else {
-        console.error("❌ Response not successful:", data);
       }
     } catch (error) {
-      console.error('❌ Error fetching messages:', error);
+      console.error('Error fetching messages:', error);
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
   };
 
@@ -211,6 +211,15 @@ export default function Messages() {
             />
           </div>
           <div className="flex gap-2">
+            <button
+              onClick={fetchMessages}
+              disabled={loading}
+              className="px-4 py-2 bg-brand-600/20 border border-brand-600/30 rounded-xl text-brand-400 hover:bg-brand-600/30 transition-all flex items-center gap-2 disabled:opacity-50"
+              title="Refresh messages"
+            >
+              <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+              <span className="text-sm font-medium hidden sm:inline">Refresh</span>
+            </button>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
