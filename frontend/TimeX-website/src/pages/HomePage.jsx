@@ -13,12 +13,11 @@ import "../styles/App.css";
 import "../styles/HomePage.css";
 
 const TESTIMONIALS = [
-  { id:1, name:"Ahmed Raza",    city:"Karachi",    initials:"AR", color:"#4f8ef7", rating:5, text:"Absolutely love my Galaxy Watch! Delivery was super fast and packaging was excellent. Will definitely buy again from TimeX." },
-  { id:2, name:"Sara Malik",    city:"Lahore",     initials:"SM", color:"#10b981", rating:5, text:"Best smart watch store in Pakistan. Got my Apple Watch in 2 days. The quality is 100% original and the price was very reasonable." },
-  { id:3, name:"Usman Tariq",   city:"Islamabad",  initials:"UT", color:"#f59e0b", rating:4, text:"Great experience overall. The Garmin Fenix I ordered is exactly as described. Customer service was also very helpful." },
-  { id:4, name:"Fatima Sheikh", city:"Faisalabad", initials:"FS", color:"#ef4444", rating:5, text:"I was skeptical at first but TimeX exceeded my expectations. The Fitbit Sense 2 looks and works perfectly. Highly recommended!" },
-  { id:5, name:"Bilal Khan",    city:"Rawalpindi", initials:"BK", color:"#8b5cf6", rating:5, text:"Amazing deals! Got 20% off on my Xiaomi Watch. The build quality is premium and battery life is incredible. 10/10 would recommend." },
-  { id:6, name:"Zara Ahmed",    city:"Multan",     initials:"ZA", color:"#ec4899", rating:4, text:"Very satisfied with my purchase. The watch came with all accessories and the strap quality is superb. Fast delivery too!" },
+  { id:1, name:"Umaima Gull",    city:"Karachi",    initials:"UG", color:"#4f8ef7", rating:5, text:"Absolutely love my Galaxy Watch! Delivery was super fast and packaging was excellent. Will definitely buy again from TimeX." },
+  { id:2, name:"Sameen Fatima",  city:"Lahore",     initials:"SF", color:"#10b981", rating:5, text:"Best smart watch store in Pakistan. Got my Apple Watch in 2 days. The quality is 100% original and the price was very reasonable." },
+  { id:3, name:"Maham Tahir",    city:"Islamabad",  initials:"MT", color:"#f59e0b", rating:4, text:"Great experience overall. The Garmin Fenix I ordered is exactly as described. Customer service was also very helpful." },
+  { id:4, name:"Anchal Kumari",  city:"Faisalabad", initials:"AK", color:"#ef4444", rating:5, text:"I was skeptical at first but TimeX exceeded my expectations. The Fitbit Sense 2 looks and works perfectly. Highly recommended!" },
+  { id:5, name:"Affan Ahmed",    city:"Rawalpindi", initials:"AA", color:"#8b5cf6", rating:5, text:"Amazing deals! Got 20% off on my Xiaomi Watch. The build quality is premium and battery life is incredible. 10/10 would recommend." },
 ];
 
 const FEATURES = [
