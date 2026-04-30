@@ -54,20 +54,22 @@ export default function ContactPage() {
 
   const inputStyle = (name) => ({
     width:"100%", boxSizing:"border-box",
-    background:"rgba(255,255,255,0.05)", border:`1px solid ${focused===name?"#4f8ef7":"rgba(255,255,255,0.1)"}`,
-    borderRadius:12, padding:"12px 14px", color:"#fff", fontSize:14, outline:"none",
-    transition:"border-color 0.2s", fontFamily:"inherit",
+    background:"var(--panel-2)", border:`1px solid ${focused===name?"var(--accent)":"var(--panel-border)"}`,
+    borderRadius:14, padding:"12px 14px", color:"var(--text-strong)", fontSize:14, outline:"none",
+    transition:"border-color 0.2s, box-shadow 0.2s", fontFamily:"inherit",
+    boxShadow: focused === name ? "0 0 0 3px rgba(240,180,76,0.12)" : "none",
   });
 
   return (
-    <div style={{ minHeight:"100vh", background:"#08080f" }}>
+    <div className="contact-page">
       <Navbar />
 
       {/* Header */}
       <section className="contact-hero">
         <div className="contact-hero__bg" />
+        <span className="contact-hero__eyebrow">Chrono Store Support</span>
         <h1 className="contact-hero__title">Contact Us</h1>
-        <p className="contact-hero__sub">We're here to help — reach out any time</p>
+        <p className="contact-hero__sub">Questions, feedback, or order help? We reply fast and with care.</p>
       </section>
 
       <div className="contact-container">
@@ -166,13 +168,13 @@ export default function ContactPage() {
                   <div>
                     <label style={{ color:"rgba(255,255,255,0.5)", fontSize:12, fontWeight:600, display:"block", marginBottom:6 }}>Subject *</label>
                     <select name="subject" value={form.subject} onChange={handleChange} required onFocus={()=>setFocused("subject")} onBlur={()=>setFocused(null)} style={{ ...inputStyle("subject"), cursor:"pointer", colorScheme: "dark" }}>
-                      <option value="" style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Select a topic</option>
-                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Product Inquiry</option>
-                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Order Status</option>
-                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Return / Exchange</option>
-                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Warranty Claim</option>
-                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Suggestion</option>
-                      <option style={{ backgroundColor:"#1a1a2e", color:"#fff" }}>Other</option>
+                      <option value="" style={{ backgroundColor:"var(--panel)", color:"var(--text-strong)" }}>Select a topic</option>
+                      <option style={{ backgroundColor:"var(--panel)", color:"var(--text-strong)" }}>Product Inquiry</option>
+                      <option style={{ backgroundColor:"var(--panel)", color:"var(--text-strong)" }}>Order Status</option>
+                      <option style={{ backgroundColor:"var(--panel)", color:"var(--text-strong)" }}>Return / Exchange</option>
+                      <option style={{ backgroundColor:"var(--panel)", color:"var(--text-strong)" }}>Warranty Claim</option>
+                      <option style={{ backgroundColor:"var(--panel)", color:"var(--text-strong)" }}>Suggestion</option>
+                      <option style={{ backgroundColor:"var(--panel)", color:"var(--text-strong)" }}>Other</option>
                     </select>
                   </div>
                 </div>
@@ -180,7 +182,7 @@ export default function ContactPage() {
                   <label style={{ color:"rgba(255,255,255,0.5)", fontSize:12, fontWeight:600, display:"block", marginBottom:6 }}>Message *</label>
                   <textarea name="message" placeholder="Write your message here..." value={form.message} onChange={handleChange} required rows={5} onFocus={()=>setFocused("message")} onBlur={()=>setFocused(null)} style={{ ...inputStyle("message"), resize:"vertical" }} />
                 </div>
-                <button type="submit" disabled={loading} style={{ background:"linear-gradient(135deg,#4f8ef7,#6366f1)", color:"#fff", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:700, cursor:loading?"not-allowed":"pointer", opacity:loading?0.8:1, transition:"opacity 0.2s" }}>
+                <button type="submit" disabled={loading} style={{ background:"linear-gradient(135deg,var(--accent),var(--accent-2))", color:"#0b0f16", border:"none", borderRadius:14, padding:"14px", fontSize:15, fontWeight:700, cursor:loading?"not-allowed":"pointer", opacity:loading?0.8:1, transition:"opacity 0.2s, transform 0.2s" }}>
                   {loading ? "Sending..." : "Send Message"}
                 </button>
             </form>

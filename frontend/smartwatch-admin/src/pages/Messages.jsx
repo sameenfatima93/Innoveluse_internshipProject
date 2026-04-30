@@ -4,7 +4,7 @@ import { API_BASE } from '../context/AdminContext';
 import { Search, Filter, Eye, X, Trash2, Mail, RefreshCw } from 'lucide-react';
 
 const statusColor = {
-  unread: 'bg-brand-600/20 text-brand-400',
+  unread: 'bg-amber-400/15 text-amber-300',
   read: 'bg-slate-600/20 text-slate-400',
   replied: 'bg-emerald-600/20 text-emerald-400',
 };
@@ -177,25 +177,50 @@ export default function Messages() {
     return matchesSearch && matchesFilter;
   });
 
+  const totalCount = messages.length;
   const unreadCount = messages.filter(m => m.status === 'unread').length;
+  const readCount = messages.filter(m => m.status === 'read').length;
+  const repliedCount = messages.filter(m => m.status === 'replied').length;
 
   return (
     <Layout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Mail size={28} className="text-brand-400" />
-            <div>
-              <h1 className="text-3xl font-bold text-white">Messages</h1>
-              <p className="text-slate-500">Contact form submissions</p>
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950/40 p-6 shadow-[0_25px_60px_rgba(3,7,18,0.6)]">
+          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-amber-400/10 blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
+          <div className="relative flex flex-col gap-4">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="h-12 w-12 rounded-2xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center">
+                  <Mail size={22} className="text-amber-300" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-white">Messages</h1>
+                  <p className="text-slate-400">Customer contact submissions</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-slate-400">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                Live updates every 2s
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-slate-200">
+                Total: {totalCount}
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-400/10 border border-amber-400/30 text-amber-300">
+                Unread: {unreadCount}
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-400/10 border border-slate-400/20 text-slate-300">
+                Read: {readCount}
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-400/10 border border-emerald-400/20 text-emerald-300">
+                Replied: {repliedCount}
+              </span>
             </div>
           </div>
-          {unreadCount > 0 && (
-            <div className="text-sm text-brand-400 mt-2">
-              {unreadCount} unread message{unreadCount !== 1 ? 's' : ''}
-            </div>
-          )}
         </div>
 
         {/* Search & Filter */}
@@ -214,7 +239,7 @@ export default function Messages() {
             <button
               onClick={fetchMessages}
               disabled={loading}
-              className="px-4 py-2 bg-brand-600/20 border border-brand-600/30 rounded-xl text-brand-400 hover:bg-brand-600/30 transition-all flex items-center gap-2 disabled:opacity-50"
+              className="px-4 py-2 bg-amber-400/15 border border-amber-400/30 rounded-xl text-amber-300 hover:bg-amber-400/25 transition-all flex items-center gap-2 disabled:opacity-50"
               title="Refresh messages"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
@@ -248,8 +273,8 @@ export default function Messages() {
               <div
                 key={message._id}
                 onClick={() => setSelectedMessage(message)}
-                className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-brand-400/50 border ${
-                  message.status === 'unread' ? 'border-brand-400/30 bg-brand-400/5' : 'border-white/10'
+                className={`glass rounded-2xl p-4 cursor-pointer transition-all hover:border-amber-400/50 hover:shadow-[0_10px_30px_rgba(2,6,23,0.5)] border ${
+                  message.status === 'unread' ? 'border-amber-400/30 bg-amber-400/5' : 'border-white/10'
                 }`}
               >
                 <div className="flex items-start justify-between">
